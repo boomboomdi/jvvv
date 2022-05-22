@@ -1,0 +1,13 @@
+/.idea
+/.vscode
+*.log
+.env
+.DS_Store
+config
+runtime/*
+vendor
+thinkphp
+.user.ini
+.gitattributes
+.travis.yml
+
