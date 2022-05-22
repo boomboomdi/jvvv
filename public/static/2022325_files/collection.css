@@ -1,0 +1,132 @@
+.app {
+	/*padding: 0 .23rem .19rem;*/
+}
+.head{
+	/*background-color: #4697FD;*/
+	background: url(../img/bg3.png) no-repeat;
+	background-size: 100% 100%;
+	/*padding-bottom: .37rem;*/
+	height: 2.3rem;
+}
+.head .dao{
+	width: .85rem;
+	height: .21rem;
+	display: block;
+	margin: .17rem auto 0;
+}
+.nav {
+	color: #7C613D;
+	font-size: .22rem;
+	line-height: .3rem;
+	width: 100%;
+	text-align: center;
+	padding-top: 34px;
+	font-weight: bold;
+}
+
+.time {
+	width: 2.75rem;
+	height: .73rem;
+	margin: .2rem auto 0;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.time .val {
+	position: absolute;
+	font-size: .51rem;
+	font-weight: bold;
+	/*font-family: DIN;*/
+	/*padding-top: .4rem;*/
+	color: #333333;
+}
+
+.msg {
+	width: 100%;
+	text-align: center;
+	font-size: .16rem;
+	color: #1E1E1E;
+	margin-top: -.2rem;
+}
+.msg img{
+	width: .85rem;
+	height: .21rem;
+}
+.body {
+	/*border: 3px solid #FFDC9E;*/
+	border-radius: 24px;
+	/*padding: .16rem 0 .18rem;*/
+	/*display: flex;*/
+	margin-top: .5rem;
+}
+
+.body .row1 {
+	font-size: .18rem;
+	font-weight: bold;
+	color: #262B2F;
+	line-height: .25rem;
+	width: 100%;
+	text-align: center;
+	margin-bottom: .12rem;
+}
+
+.body .row2,
+.body .row3 {
+	font-size: .15rem;
+	color: #FF5050;
+	line-height: .25rem;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	/*margin-top: .08rem;*/
+}
+.body .row4{
+	color: #262B2F;
+	font-size: .14rem;
+	line-height: .2rem;
+	width: 100%;
+	text-align: center;
+	margin-top: .12rem;
+}
+
+.row_ {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: url(../img/row_bg.png) no-repeat;
+	background-size: 100% 100%;
+	width: 3.35rem;
+	margin: .2rem auto 0;
+}
+.row_ div:nth-of-type(1){
+	width: 1.04rem;
+	flex-shrink: 0;
+	font-size: .14rem;
+	color: #B59060;
+	/*padding-left: .08rem;*/
+	padding: .09rem 0 .09rem .08rem;
+	line-height: .22rem;
+}
+.row_ div:nth-of-type(2){
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	font-size: .16rem;
+	word-break: break-all;
+	padding: .0rem .1rem;
+	line-height: .16rem;
+}
+.row_ div:nth-of-type(3){
+	width: .44rem;
+	flex-shrink: 0;
+	line-height: .28rem;
+	background-color: #FFDDB0;
+	border-radius: 4px;
+	text-align: center;
+	font-size: .14rem;
+	color: #333333;
+	margin-right: .06rem;
+}
+
