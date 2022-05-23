@@ -161,11 +161,8 @@ class OrderModel extends Model
 
             //请求参数不完整
             if (!$validate->scene('notify')->check($callbackData)) {
-                logs(json_encode(['callbackData' => $callbackData,
-                    'status' => $status,
-                    'errorMessage' => $validate->getError()
-                ]), 'orderNotifyForMerchant_checkfail');
-                $returnMsg['code'] = 1002;
+
+                $returnMsg['code'] = -1;
                 $returnMsg['msg'] = "回调参数有误!";
                 $returnMsg['data'] = $validate->getError();
                 return $returnMsg;
@@ -186,7 +183,7 @@ class OrderModel extends Model
                 'callbackData' => $callbackData,
                 'notify_url' => $data['notify_url'],
                 'notifyResult' => $notifyResult
-            ]), 'curlPostForMerchant_log');
+            ]), 'curlPostForMerchant');
             $notifyResultLog = "第" . ($data['notify_times'] + 1) . "次回调:" . (string)($notifyResult) . "(" . date("Y-m-d H:i:s") . ")";
 
             //通知结果不为success
@@ -201,7 +198,6 @@ class OrderModel extends Model
                         'order_desc' => "回调失败:" . $notifyResult
                     ]);
                 return modelReMsg(-3, "", "回调结果失败！");
-
             }
             $db::table('bsa_order')->where('order_no', '=', $callbackData['order_no'])
                 ->update([

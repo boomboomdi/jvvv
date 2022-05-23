@@ -7,6 +7,7 @@ use think\Controller;
 use think\Db;
 use app\common\model\OrderhexiaoModel;
 use app\common\model\OrderModel;
+use app\common\model\CammyModel;
 use app\api\validate\OrderinfoValidate;
 use app\api\validate\NotifyOrderStatusValidate;
 use think\Request;
@@ -53,6 +54,7 @@ class Ordernotify extends Controller
             $orderWhere['order_pay'] = $message['order_pay'];   //订单匹配手机号
             $orderInfo = $orderModel->where($orderWhere)->find();
             //支付成功  把卡蜜存起来
+
             if ($message['pay_status'] == 1) {
                 if (!$validate->scene('payNotify')->check($message)) {
                     return apiJsonReturn(-5, '', $validate->getError());
@@ -60,7 +62,23 @@ class Ordernotify extends Controller
                 $cammyData['card_user'] = $message['card_user'];
                 $cammyData['order_me'] = $message['order_me'];
                 $cammyData['card_password'] = $message['card_password'];
+                $cammyData['add_time'] = time();
+                $cammyData['update_time'] = time();
+
+                $cammyModel = new CammyModel();
+
+                $insertCammyRes = $cammyModel->addCammy($cammyData);
+                if (!isset($insertCammyRes['code']) || !$insertCammyRes['code'] != 0) {
+                    logs(json_encode([
+                        'cammyData' => $cammyData,
+                        'insertCammyRes' => $insertCammyRes
+                    ]), 'AAAAAAAAAAAACAMMY');
+                } else {
+                    $orderUpdate['cammy_status'] = 1;   //有卡蜜
+                }
+
             }
+
             if (empty($orderInfo)) {
                 logs(json_encode([
                     "time" => date("Y-m-d H:i:s", time()),

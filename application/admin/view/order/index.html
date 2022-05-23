@@ -48,17 +48,11 @@
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">手机号</label>
+                    <label class="layui-form-label">抖音单号</label>
                     <div class="layui-input-block">
-                        <input type="text" name="account" placeholder="请输入" autocomplete="off" class="layui-input">
+                        <input type="text" name="order_pay" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <!--                <div class="layui-inline">-->
-                <!--                    <label class="layui-form-label">通道编号</label>-->
-                <!--                    <div class="layui-input-block">-->
-                <!--                        <input type="text" name="order_pay" placeholder="请输入" autocomplete="off" class="layui-input">-->
-                <!--                    </div>-->
-                <!--                </div>-->
                 <div class="layui-inline">
                     <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="LAY-user-back-search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
@@ -74,8 +68,15 @@
                 <span class="layui-badge-dot green"></span>回调成功
                 {{#  } else if(d.notify_status == 2){ }}
                 <span class="layui-badge-dot gray"></span>回调失败
-                {{#  } else if(d.notify_status == 0){ }}
+                {{#  } else if(d.notify_status == 3){ }}
                 <span class="layui-badge-dot gray"></span>未回调
+                {{#  } }}
+            </script>
+            <script type="text/html" id="cammyStatusTpl">
+                {{#  if(d.cammy_status == 1){ }}
+                <span class="layui-badge-dot green"></span>收到
+                {{#  } else if(d.cammy_status == 2){ }}
+                <span class="layui-badge-dot gray"></span>未收
                 {{#  } }}
             </script>
             <script type="text/html" id="table-seller-admin">
@@ -146,22 +147,18 @@
                 field: "order_me",
                 title: "平台单号",
             }, {
-                field: "account",
-                title: "匹配手机",
+                field: "cammy_status",
+                title: "卡密状态",
+                align: "center",
+                templet: '#cammyStatusTpl'
             }, {
                 field: "amount",
                 title: "订单金额",
-            }, {
-                field: "start_check_amount",
-                title: "开单金额",
             }, {
                 field: "add_time",
                 title: "下单时间",
                 align: "center",
                 width: 170,
-            }, {
-                field: "pay_name",
-                title: "选择方式",
             }, {
                 field: "click_time",
                 title: "点击时间",
@@ -178,10 +175,10 @@
                 align: "center",
                 templet: '#notifyStatusTpl'
             },
-                //     {
-                //     field: "notify_time",
-                //     title: "回调时间"
-                // },
+                {
+                    field: "notify_time",
+                    title: "回调时间"
+                },
                 {
                     field: "check_result",
                     title: "查单备注"

@@ -116,36 +116,19 @@ class Order extends Base
                 //查询订单
                 $order = Db::table("bsa_order")->where("id", $id)->find();
                 if (empty($order)) {
-                    logs(json_encode([
-                        'notify' => "notify",
-                        'id' => input('param.id')
-                    ]), 'notifyEmptyOrder_log');
-
                     return json(modelReMsg(-2, '', '回调订单有误!'));
                 }
                 $orderModel = new OrderModel();
-                $orderHXModel = new OrderhexiaoModel();
 
                 $orderWhere['order_me'] = $order['order_me'];
                 $orderData = $orderModel->where($orderWhere)->find();
                 if (empty($orderData) || $orderData['pay_status'] == 1) {
                     return json(modelReMsg(-3, '', '此订单不可回调!'));
                 }
-                logs(json_encode(['order_id' => $id,
-                    'v' => $orderData,
-                    "sql" => Db::table("bsa_order_hexiao")->getLastSql(),
-                    "time" => date("Y-m-d H:i:s", time())
-                ]), 'ADontDELETEnotify_log');
-
-                $localUpdate = $orderHXModel->orderLocalUpdate($orderData, 2);
-                if (!isset($localUpdate['code']) || $localUpdate['code'] != 0) {
-                    logs(json_encode(["time" => date("Y-m-d H:i:s", time()),
-                        'order_no' => $orderData['order_no'],
-                        'phone' => $orderData['account'],
-                        "localUpdateFail" => json_encode($localUpdate)
-                    ]), 'order_notify_log');
-                    return json(modelReMsg(-3, '', '回调订单发生错误!'));
+                if ($orderData['pay_status'] == 1) {
+                    return json(modelReMsg(-3, '', '此订单不可回调!'));
                 }
+
                 return json(modelReMsg(1000, '', '回调成功'));
             } else {
                 return json(modelReMsg(-99, '', '访问错误'));
@@ -226,7 +209,6 @@ class Order extends Base
                 $updateCheckData['check_status'] = 3;
                 Db::table("bsa_order")->where($updateCheckWhere)
                     ->update($updateCheckData);
-
 
 
             } else {

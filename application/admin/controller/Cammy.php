@@ -9,13 +9,14 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\CammyModel;
 use app\admin\model\PrepareModel;
 use think\Db;
 use app\admin\validate\PrepareValidate;
 use app\common\model\OrderdouyinModel;
 use tool\Log;
 
-class Prepare extends Base
+class Cammy extends Base
 {
     //预拉任务
     public function index()
@@ -30,24 +31,11 @@ class Prepare extends Base
                 $where[] = ['admin_name', 'like', $adminName . '%'];
             }
             $db = new Db();
-            $model = new PrepareModel();
-            $list = $model->getPrepareLists($limit, $where);
+            $model = new CammyModel();
+            $list = $model->getLists($limit, $where);
             $data = empty($list['data']) ? array() : $list['data'];
             foreach ($data as $key => $vo) {
                 $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
-                $canUseNum = $db::table("bsa_prepare_order")
-                    ->where('status', '<>', 2)
-                    ->where('get_url_status', '=', 1)
-                    ->where('order_status', '=', 3)   //等待匹配
-                    ->where('order_amount', '=', $vo['order_amount'])
-                    ->count();
-
-                $doPrepareNum = $db::table("bsa_prepare_order")
-                    ->where('order_amount', '=', $vo['order_amount'])
-                    ->where('get_url_status', '=', 3)
-                    ->count();
-                $data[$key]['canUseNum'] = $canUseNum;
-                $data[$key]['doPrepareNum'] = $doPrepareNum;
             }
             $list['data'] = $data;
             if (0 == $list['code']) {
