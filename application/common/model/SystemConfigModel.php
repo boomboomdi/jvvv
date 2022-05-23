@@ -22,19 +22,19 @@ class SystemConfigModel extends Model
     public static function getOrderLockTime()
     {
         try {
-            $where[] = ["configName", "=", "orderLockTime"];
-            $where[] = ["status", "=", 1];
-            $config = Db::table('bsa_system_config')
-                ->where($where)
-                ->find();
-            if (isset($config['configContent']) && !empty($config['configContent'])) {
-                return (int)$config['configContent'];
-            }
-            return 900;
+//            $where[] = ["configName", "=", "orderLockTime"];
+//            $where[] = ["status", "=", 1];
+//            $config = Db::table('bsa_system_config')
+//                ->where($where)
+//                ->find();
+//            if (isset($config['configContent']) && !empty($config['configContent'])) {
+//                return (int)$config['configContent'];
+//            }
+            return 21600;
         } catch (\Exception $exception) {
-            return 900;
+            return 21600;
         } catch (\Error $error) {
-            return 900;
+            return 21600;
         }
     }
 
@@ -92,19 +92,19 @@ class SystemConfigModel extends Model
     public static function getOrderShowTime()
     {
         try {
-            $where[] = ["configName", "=", "orderShowTime"];
-            $where[] = ["status", "=", 1];
-            $config = Db::table('bsa_system_config')
-                ->where($where)
-                ->find();
-            if (isset($config['configContent']) && !empty($config['configContent'])) {
-                return (int)$config['configContent'];
-            }
-            return 180;
+//            $where[] = ["configName", "=", "orderShowTime"];
+//            $where[] = ["status", "=", 1];
+//            $config = Db::table('bsa_system_config')
+//                ->where($where)
+//                ->find();
+//            if (isset($config['configContent']) && !empty($config['configContent'])) {
+//                return (int)$config['configContent'];
+//            }
+            return 300;
         } catch (\Exception $exception) {
-            return 180;
+            return 300;
         } catch (\Error $error) {
-            return 180;
+            return 300;
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\shell;
+namespace app\shellHUA;
 
 use app\common\model\OrderModel;
 use think\console\Command;
@@ -34,7 +34,7 @@ class Timenotifyorder extends Command
                 ->where('pay_status', '=', 1)
                 ->where('notify_status', '<>', 1)
                 ->where('do_notify', '=', 0)
-                ->where('notify_times', '<', 5)
+                ->where('notify_times', '<', 3)
                 ->select();
             $totalNum = count($orderData);
             if ($totalNum > 0) {

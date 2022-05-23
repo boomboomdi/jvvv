@@ -1,10 +1,9 @@
 <?php
 
-namespace app\shell;
+namespace app\shellHUA;
 
+use app\common\model\OrderhexiaoModel;
 use app\common\model\OrderModel;
-use app\common\model\OrderprepareModel;
-use app\common\Redis;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
@@ -31,57 +30,58 @@ class Timecheckorder extends Command
 
         $db = new Db();
         try {
-            $orderPrepareModel = new OrderprepareModel();
+            $orderHXModel = new OrderhexiaoModel();
             $orderModel = new OrderModel();
             //一直查询  --等待 回调 code!=0  改为status  =2
             $orderData = $orderModel
                 ->where('order_status', '=', 4)
                 ->where('next_check_time', '<', time())
-                ->where('order_pay', '<>', null)
-                ->where('order_me', '<>', null)
-                ->where('check_times', '<', 20)
+//                ->where('order_limit_time', '>', time())
+//                ->where('check_status', '=', 0)
+                ->where('check_times', '<', 3)
                 ->select();
 
             $totalNum = count($orderData);
             if ($totalNum > 0) {
                 foreach ($orderData as $k => $v) {
-                    $redis = new Redis(['index' => 1]);
-                    $PrepareOrderKey = "CheckOrderStatus" . $v['order_me'];
-                    $setRes = $redis->setnx($PrepareOrderKey, $v['order_me'], 20);
-                    if ($setRes) {
-                        //修改订单查询状态为查询中
-                        $updateCheckData['check_status'] = 1;
-                        $updateCheckData['last_check_time'] = time();
-                        $updateCheckWhere['order_me'] = $v['order_me'];
-                        $db::table("bsa_order")->where($updateCheckWhere)
-                            ->update($updateCheckData);
-                        //修改订单查询状态为查询中 end
+//                    $db::startTrans();
+                    $updateCheckWhere['order_no'] = $v['order_no'];
+//                    $updateCheckWhere['check_status'] = 0;
+                    $lock = $db::table("bsa_order")->where($updateCheckWhere)->find();
+                    if ($lock) {
+                        if ($lock['check_status'] == 0) {
+                            //修改订单查询状态为查询中
+                            $updateCheckData['check_status'] = 1;
+                            $updateCheckData['last_use_time'] = time();
+                            $updateCheckData['next_check_time'] = time() + 90;
+                            $db::table("bsa_order")->where($updateCheckWhere)
+                                ->update($updateCheckData);
+                            //修改订单查询状态为查询中 end
 
-                        $cookieWhere['account'] = $v['ck_account'];
-                        $cookie = Db::table("bsa_cookie")->where($cookieWhere)->find();
-                        if (!empty($cookie) && isset($cookie['cookie'])) {
-                            //查单请求：ck，后台订单号，官方订单号，金额
-                            $getResParam['cookie'] = $cookie['cookie'];
-                            $getResParam['order_me'] = $v['order_me'];
-                            $getResParam['order_pay'] = $v['order_pay'];
-                            $getResParam['amount'] = $v['amount'];
+                            $getResParam['order_no'] = $v['order_no'];
+                            $getResParam['phone'] = $v['account'];
+                            $getResParam['action'] = "other";
                             $checkStartTime = date("Y-m-d H:i:s", time());
-                            $checkOrderStatusRes = $orderPrepareModel->checkOrderStatus($getResParam);
-                            if (!isset($checkOrderStatusRes['code']) || $checkOrderStatusRes['code'] != 0) {
+                            $getPhoneAmountRes = $orderHXModel->checkPhoneAmount($getResParam, $v['order_pay']);
+                            if ($getPhoneAmountRes != "success") {
                                 $updateCheckWhere['order_no'] = $v['order_no'];
-                                $updateCheckData['check_status'] = 3;
+                                $updateCheckData['check_status'] = 0;
                                 $db::table("bsa_order")->where($updateCheckWhere)
                                     ->update($updateCheckData);
                             }
-                            logs(json_encode([
+
+                            logs(json_encode(['phone' => $v['account'],
                                 "order_no" => $v['order_no'],
                                 "startTime" => $checkStartTime,
                                 "endTime" => date("Y-m-d H:i:s", time()),
-                                "getPhoneAmountRes" => $checkOrderStatusRes
-                            ]), 'Timecheckorder');
+                                "getPhoneAmountRes" => $getPhoneAmountRes
+                            ]), 'TimecheckordercheckPhoneAmount');
+//                            $db::commit();
                         } else {
-                            $redis->delete($PrepareOrderKey);
+//                            $db::rollback();
                         }
+                    } else {
+//                        $db::rollback();
                     }
                 }
 

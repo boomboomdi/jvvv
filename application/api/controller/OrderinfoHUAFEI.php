@@ -19,7 +19,7 @@ header("Access-Control-Allow-Credentials:true");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept,Authorization");
 header('Access-Control-Allow-Methods:GET,POST,PUT,DELETE,OPTIONS,PATCH');
 
-class Orderinfo extends Controller
+class OrderinfoHUAFEI extends Controller
 {
 
 
@@ -75,7 +75,6 @@ class Orderinfo extends Controller
                 return apiJsonReturn(-6, "无可匹配订单！");
             }
             $orderLimitTime = SystemConfigModel::getOrderLockTime();
-            $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
             $db::startTrans();
             $hxOrderData = $db::table("bsa_order_hexiao")
                 ->field("bsa_order_hexiao.*")
@@ -106,6 +105,7 @@ class Orderinfo extends Controller
             $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
             $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'] . "&apiUrl=" . $apiUrl;
 
+            $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
             $hxWhere['id'] = $hxOrderData['id'];
             $hxWhere['order_no'] = $hxOrderData['order_no'];
             $updateMatch['check_status'] = 0;
@@ -360,23 +360,34 @@ class Orderinfo extends Controller
                 //有没有之前没有支付的订单匹配的上金额
                 $hasPayOrderData = $orderModel
                     ->where("account", '=', $orderInfo['account'])
+                    ->where("order_pay", '=', $orderInfo['order_pay'])
+                    ->where("order_no", '<>', $orderInfo['order_no'])
                     ->where("order_status", '<>', 1)
                     ->where("pay_status", '<>', 1)
                     ->where("end_check_amount", '<', $getUseHxOrderRes['data']['last_check_amount'] + 10)
+                    ->where("add_time", '>', time() - 4600)
+                    ->order('add_time desc')
                     ->find();
                 if (!empty($hasPayOrderData)) {
+                    logs(json_encode([
+                        "nowTime" => date("Y-m-d H:i:s", time()),
+                        'findLoseOrder' => $hasPayOrderData['order_no'],
+                        'add_time' => $hasPayOrderData['add_time'],
+                        'account' => $hasPayOrderData['account'],
+
+                    ]), 'AfindHasPayOrderAndNotify');
                     //当前订单更改为下单失败状态
                     $updateOrderStatus['order_status'] = 3;
                     $updateOrderStatus['last_use_time'] = time();
-                    $updateOrderStatus['check_result'] = "发现调单此单失败" . $getUseHxOrderRes['data'];
-                    $updateOrderStatus['order_desc'] = "发现有调单|此单下单失败！";
+                    $updateOrderStatus['check_result'] = "发现掉单此单失败" . json_encode($hasPayOrderData['order_no']);
+                    $updateOrderStatus['order_desc'] = "发现掉单|此单下单失败！";
                     $updateMatchRes = $orderModel->where('order_no', $orderInfo['order_no'])->update($updateOrderStatus);
                     if (!$updateMatchRes) {
                         logs(json_encode([
                             'action' => 'updateMatchRes',
                             'message' => $message,
                             'updateMatchRes' => $updateMatchRes,
-                        ]), 'getOrderInfoFail');
+                        ]), 'hasPayOrderUpdateFail');
                         return json(msg(-31, '', '下单失败,请重新下单！-31'));
                     }
                     //修改订单为下单失败状态。  end
@@ -385,8 +396,8 @@ class Orderinfo extends Controller
                     $orderHXModel = new OrderhexiaoModel();
                     $updateOrderWhere['order_no'] = $hasPayOrderData['order_no'];
                     $updateOrderWhere['account'] = $hasPayOrderData['account'];
-                    //传递订单表
-                    $localUpdateRes = $orderHXModel->loseOrderLocalUpdateNew($hasPayOrderData, 3);
+                    //订单表
+                    $localUpdateRes = $orderHXModel->loseOrderLocalUpdateNew($hasPayOrderData, 3, $getUseHxOrderRes['data']['last_check_amount']);
                     logs(json_encode([
                         "time" => date("Y-m-d H:i:s", time()),
                         'findLoseOrder' => $hasPayOrderData['order_no'],
@@ -397,6 +408,7 @@ class Orderinfo extends Controller
                     if (!isset($localUpdate['code']) || $localUpdate['code'] != 0) {
                         return json(msg(32, '', '下单失败，请重新下单2！'));
                     }
+                    //给之前的订单回调 end
                     return json(msg(32, '', '下单失败，请重新下单1'));
                 }
                 $updateOrderStatus['order_status'] = 4;   //等待支付状态

@@ -9,11 +9,9 @@ class OrderinfoValidate extends Validate
     protected $rule = [
         'merchant_sign' => 'require|max:32',
         'order_no' => 'require|max:32',
-//        'order_pay' => 'require|length:32',
         'payment' => 'require',
         'amount' => 'require|float',
         'notify_url' => 'require',
-//        'actual_amount' => 'require|float',
         'time' => 'require',
         'sign' => 'require|max:32',
     ];

@@ -20,7 +20,6 @@ class Redis
             $index = 0;
         }
 
-//        var_dump($host.$port.$auth);exit;
         $sn = md5("{$host}{$port}{$auth}{$index}");
         $this->sn = $sn;
         if (!isset($this->redisObj[$this->sn])) {

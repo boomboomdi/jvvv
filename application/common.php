@@ -36,6 +36,16 @@ function getCookieAccount($cookie)
     return $return;
 }
 
+function getJdCookieAccount($cookie)
+{
+    $cookie = str_replace(" ", '', $cookie);
+    $start = strpos($cookie, 'pin=');
+    $cookie2 = substr($cookie, $start);
+    $end = strpos($cookie2, ';');
+    $return = substr($cookie2, 0, $end);
+    return $return;
+}
+
 /**
  * 检测密码
  * @param $dbPassword

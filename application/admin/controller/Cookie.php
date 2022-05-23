@@ -11,6 +11,7 @@ namespace app\admin\controller;
 
 use app\admin\model\CookieModel;
 use app\admin\validate\CookieValidate;
+use app\common\model\DoRedis;
 use think\Validate;
 use tool\Log;
 
@@ -28,33 +29,15 @@ class Cookie extends Base
             if (!empty($account)) {
                 $where['account'] = ['=', $account];
             }
-//            if (!empty($account)) {
-//                $where[] = ['account', 'like', $account . '%'];
-//            }
             $cookieModel = new CookieModel();
-//            var_dump(session("admin_role_id"));
-//            exit;
-//            $studio = session("admin_role_id");
-//            if ($studio == 7) {
-//                $where['studio'] = ['=', session("admin_user_name")];   //默认情况下 登录名就是 工作室标识
-////                $where[] = ['studio', "=", session("admin_user_name")];  //默认情况下 登录名就是 工作室标识
-//            }
             $list = $cookieModel->getCookies($limit, $where);
+
             $data = empty($list['data']) ? array() : $list['data'];
-//            var_dump($data);exit;
             foreach ($data as $key => $vo) {
-                $data[$key]['cookie'] = substr($vo['cookie'], 0, 30);
-////                $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
-////                $data[$key]['heart_time'] = date('Y-m-d H:i:s', $vo['heart_time']);
-////
-////                if (!empty($data[$key]['qr_update_time']) && $data[$key]['qr_update_time'] != 0) {
-////                    $data[$key]['update_time'] = date('Y-m-d H:i:s', $data[$key]['qr_update_time']);
-////                }
-//
-//                //订单状态 :是否可用1：可用2：不可用（心跳正常且开启情况下是否可下单）
-//                //设备状态：是否开启1：开启中2已关闭
-//                //心跳2：离线  1在线
+                $list[$key]['cookie'] = substr($vo['cookie'], 0, 30);
+//                $list[$key]['add_time'] = date('Y-m-d H:i:s', $vo['add_time']);
             }
+
             $list['data'] = $data;
             if (0 == $list['code']) {
                 return json(['code' => 0, 'msg' => 'ok', 'count' => $list['data']->total(), 'data' => $list['data']->all()]);
@@ -87,7 +70,7 @@ class Cookie extends Base
             $cookieContentsArray = explode("\n", $param['cookie_contents']);
             if (is_array($cookieContentsArray)) {
                 foreach ($cookieContentsArray as $key => $v) {
-                    $getCookieAccount = getCookieAccount($v);
+                    $getCookieAccount = getJdCookieAccount($v);
                     if ($getCookieAccount) {
                         $addCookieParam['last_use_time'] = time();
                         $addCookieParam['cookie'] = $v;
@@ -102,9 +85,14 @@ class Cookie extends Base
                         if ($res['code'] == 0) {
                             $newNum++;
                         }
+
                     }
                     $total++;
                 }
+//                if ($updateNum >= 0) {
+//                     $redis = new DoRedis();
+//                     $redis->setCreatePrepareOrderNumByAmount()
+//                }
             }
             Log::write($param['cookie_sign'] . ',添加COOKIES：总：' . $total . "其中新增：" . $newNum . "覆盖：" . $updateNum);
 

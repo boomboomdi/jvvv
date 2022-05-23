@@ -87,10 +87,10 @@ class CookieModel extends Model
             return modelReMsg(-2, "", '无可用下单COOKIE');
         } catch (\Exception $exception) {
             logs(json_encode(['file' => $exception->getFile(), 'line' => $exception->getLine(), 'errorMessage' => $exception->getMessage()]), 'getUseCookie_exception');
-            return modelReMsg(-1, '', $exception->getMessage());
+            return modelReMsg(-11, '', $exception->getMessage());
         } catch (\Error $error) {
             logs(json_encode(['file' => $error->getFile(), 'line' => $error->getLine(), 'errorMessage' => $error->getMessage()]), 'getUseCookie_error');
-            return modelReMsg('-3', "getUseCookie异常" . $error->getMessage());
+            return modelReMsg(-22, "getUseCookie异常" . $error->getMessage());
         }
 
     }
@@ -107,7 +107,7 @@ class CookieModel extends Model
             $has = $this->where($where)
                 ->findOrEmpty()->toArray();
             if (empty($has)) {
-                return modelReMsg(-2, '', '管理名已经存在');
+                return modelReMsg(-2, '', 'ck不存在！');
             }
 
             $this->where($where)->update($update);

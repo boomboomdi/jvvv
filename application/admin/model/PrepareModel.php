@@ -49,7 +49,7 @@ class PrepareModel extends Model
 
             $has = $this->where('order_amount', $data['order_amount'])->findOrEmpty()->toArray();
             if (!empty($has)) {
-                return modelReMsg(-2, '', '预产名已经存在');
+                return modelReMsg(-2, '', '预产任务已经存在');
             }
 
             $this->insert($data);
@@ -69,7 +69,6 @@ class PrepareModel extends Model
     public function getPrepareById($id)
     {
         try {
-
             $info = $this->where('id', $id)->findOrEmpty()->toArray();
         } catch (\Exception $e) {
 
@@ -123,7 +122,6 @@ class PrepareModel extends Model
 
         return modelReMsg(0, '', '删除成功');
     }
-
 
 
     /**

@@ -17,7 +17,7 @@ use tool\Log;
 
 class Prepare extends Base
 {
-    // 商户列表
+    //预拉任务
     public function index()
     {
         if (request()->isAjax()) {
@@ -34,38 +34,18 @@ class Prepare extends Base
             $list = $model->getPrepareLists($limit, $where);
             $data = empty($list['data']) ? array() : $list['data'];
             foreach ($data as $key => $vo) {
-                $orderdouyinModel = new OrderdouyinModel();
-//                $data[$key]['canUseNum'] = 0;
-//                $data[$key]['canUseNum'] = $orderdouyinModel
-//                    ->where('total_amount', '=', $vo['order_amount'])
-//                    ->where('url_status', '=', 1)
-//                    ->where('order_me', '=', null)
-//                    ->where('status', '=', 1)
-//                    ->where('last_use_time', '>', time() - 180)
-//                    ->where('last_use_time', '<', time())->count();
                 $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
-                $canUseNum = 0;
-                $canUseNum = $db::table("bsa_torder_douyin")
+                $canUseNum = $db::table("bsa_prepare_order")
                     ->where('status', '=', 1)
                     ->where('url_status', '=', 1)
                     ->where('total_amount', '=', $vo['order_amount'])
-                    ->where('get_url_time', '>', time() - 180)
-                    ->where('get_url_time', '<', time())
-//                    ->where('get_url_time', '>', 0)
-//                    ->where('get_url_time', '<', time() + 180)
-                    ->where('limit_time_1', '>', time())
-//                    ->order("add_time asc")
+                    ->where('order_limit_time', '>', time())
                     ->count();
-//                logs(json_encode(["sql" => Db::table("bsa_torder_douyin")->getLastSql(), "time" => date("Y-m-d H:i:s", time())]), 'Prepare_log');
 
-                $doPrepareNum = $db::table("bsa_torder_douyin")
-//                        ->where('status', '=', 0)
-//                        ->where('url_status', '=', 1)
-                    ->where('status', '=', 0)
-//                        ->where('url_status', '=', 1)
+                $doPrepareNum = $db::table("bsa_prepare_order")
+                    ->where('status', '=', 3)
                     ->where('total_amount', '=', $vo['order_amount'])
-                    ->where('weight', '=', 1)
-                    ->where('get_url_time', '=', 0)
+                    ->where('get_url_time', '=', 3)
                     ->count();
 //                logs(json_encode(["sql" => Db::table("bsa_torder_douyin")->getLastSql(), "time" => date("Y-m-d H:i:s", time())]), 'Prepare_log');
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\shell;
+namespace app\shellHUA;
 
 use app\common\model\OrderModel;
 use think\console\Command;
