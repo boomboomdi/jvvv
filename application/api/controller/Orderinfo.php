@@ -192,7 +192,7 @@ class Orderinfo extends Controller
                 return json(msg(-5, '', '订单超时，请重新下单'));
             }
             if ($orderInfo['order_status'] != 4) {
-                return json(msg(-5, '', '订单状态有误，请重新下单！'));
+                return json(msg(-6, '', '订单状态有误，请重新下单！'));
             }
             $returnData['amount'] = $orderInfo['amount'];
             $limitTime = (($orderInfo['add_time'] + $orderShowTime) - time());

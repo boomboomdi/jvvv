@@ -14,7 +14,7 @@ class NotifyjdurlValidate extends Validate
         'order_me' => 'require',         //平台单号
         'order_pay' => 'require',        //京东单号
         'amount' => "require",           //订单金额   不要小数点元
-        'qr_url' => "require|activeUrl",  //支付链接  activeUrl
+        'qr_url' => "require",  //支付链接  activeUrl
     ];
 
     protected $message = [
@@ -24,7 +24,7 @@ class NotifyjdurlValidate extends Validate
         'order_pay.require' => 'require.order_pay',
         'amount.require' => 'require.amount',
         'qr_url.require' => 'require.qr_url',
-        'qr_url.activeUrl' => 'qr_url format error',
+//        'qr_url.activeUrl' => 'qr_url format error',
     ];
 
 
