@@ -35,14 +35,14 @@ class Prepare extends Base
             $data = empty($list['data']) ? array() : $list['data'];
             foreach ($data as $key => $vo) {
                 $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
-                $canUseNum = $db::table("bsa_prepare_order")
+                $canUseNum = $db::table("bsa_order_prepare")
                     ->where('status', '<>', 2)
                     ->where('get_url_status', '=', 1)
                     ->where('order_status', '=', 3)   //等待匹配
                     ->where('order_amount', '=', $vo['order_amount'])
                     ->count();
 
-                $doPrepareNum = $db::table("bsa_prepare_order")
+                $doPrepareNum = $db::table("bsa_order_prepare")
                     ->where('order_amount', '=', $vo['order_amount'])
                     ->where('get_url_status', '=', 3)
                     ->count();
