@@ -46,7 +46,7 @@ class Prepareorder extends Command
             } else {
                 foreach ($prepareAmountList as $k => $v) {
                     $redis = new Redis(['index' => 1]);
-                    $PrepareOrderKey = "PrepareOrder" . $v['order_amount'];
+                    $PrepareOrderKey = "prepareOrder" . $v['order_amount'];
                     $setRes = $redis->setnx($PrepareOrderKey, $PrepareOrderKey, 10);
                     logs(json_encode([
                         'order_amount' => $v['order_amount'],
