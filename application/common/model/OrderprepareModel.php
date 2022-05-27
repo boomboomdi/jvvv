@@ -123,7 +123,7 @@ class OrderprepareModel extends Model
                     break;
                 } else {
                     $addParam['order_me'] = md5(uniqid() . getMillisecond());
-                    $addParam['ck_account'] = $cookie['account'];
+                    $addParam['ck_account'] = $cookie['data']['account'];
                     $addParam['status'] = 2;  //默认停用
                     $addParam['order_serial'] = $this->getOrderSerial();
                     $addParam['order_amount'] = $amount;
@@ -137,7 +137,7 @@ class OrderprepareModel extends Model
                             "insertRes" => $insertRes
                         ]), 'curlGetJDOrderUrlInsertOrderFail');
                     } else {
-                        $param['cookie'] = $cookie['cookie'];
+                        $param['cookie'] = $cookie['data']['cookie'];
                         $param['order_me'] = $addParam['order_me'];
                         $param['amount'] = $addParam['order_amount'];
                         $checkStartTime = date('Y-m-d H:i:s', time());
