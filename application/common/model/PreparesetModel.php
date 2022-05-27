@@ -19,7 +19,7 @@ class PreparesetModel extends Model
         try {
             $orderPrepareModel = new OrderprepareModel();
             foreach ($prepareAmountList as $k => $v) {
-                $redis = new Redis(['index' => 1]);
+                $redis = new Redis();
                 $PrepareOrderKey = "PrepareOrder" . $v['account'];
                 $setRes = $redis->setnx($PrepareOrderKey, $v['account'], 10);
                 if ($setRes) {

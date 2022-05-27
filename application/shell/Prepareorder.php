@@ -9,7 +9,7 @@ use think\console\Output;
 use app\common\model\OrderprepareModel;
 use app\common\model\PreparesetModel;
 use think\Db;
-use app\common\Redis;
+//use app\common\Redis;
 
 class Prepareorder extends Command
 {
