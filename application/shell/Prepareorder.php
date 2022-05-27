@@ -46,20 +46,20 @@ class Prepareorder extends Command
             } else {
                 foreach ($prepareAmountList as $k => $v) {
                     $redis = new Redis(['index' => 1]);
-                    $PrepareOrderKey = "PrepareOrder" . $v['amount'];
+                    $PrepareOrderKey = "PrepareOrder" . $v['order_amount'];
                     $setRes = $redis->setnx($PrepareOrderKey, 10);
                     if ($setRes) {
                         $doNum = $v['prepare_num'];
                         //查询可用订单
-                        $canUseNum = $orderPrepareModel->getPrepareOrderNum($v['amount']);
+                        $canUseNum = $orderPrepareModel->getPrepareOrderNum($v['order_amount']);
                         $doNum -= $canUseNum;
                         //查询匹配中订单
-                        $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['amount'], 3);
+                        $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['order_amount'], 3);
                         $doNum -= $doPrepareNum;
                         if ($doNum > 0) {
 
                             $checkStartTime = date('Y-m-d H:i:s', time());
-                            $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['amount'], $doNum);
+                            $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['order_amount'], $doNum);
 
                             if (!isset($createPrepareOrderRes['code']) || $createPrepareOrderRes['code'] != 0) {
                                 logs(json_encode([
