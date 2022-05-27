@@ -62,8 +62,18 @@ class Prepareorder extends Command
                         $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['amount'], 3);
                         $doNum -= $doPrepareNum;
                         if ($doNum > 0) {
+
+                            $checkStartTime = date('Y-m-d H:i:s', time());
                             $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['amount'], $doNum);
+
                             if (!isset($createPrepareOrderRes['code']) || $createPrepareOrderRes['code'] != 0) {
+                                logs(json_encode([
+                                    "startTime" => $checkStartTime,
+                                    "endTime" => date("Y-m-d H:i:s", time()),
+                                    'param' => $v['amount'],
+                                    'doNum' => $doNum,
+                                    "curlLocalRes" => $createPrepareOrderRes
+                                ]), 'curlGetJDOrderUrlFail');
                                 $redis->delete($PrepareOrderKey);
                             }
                             $redis->delete($PrepareOrderKey);
