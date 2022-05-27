@@ -33,5 +33,9 @@ class Ceshi extends Controller
             return json(msg(-22, '', 'orderInfo error!' . $error->getMessage()));
         }
     }
+    public function info()
+    {
+        echo phpinfo();
+    }
 
 }
