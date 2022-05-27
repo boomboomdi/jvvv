@@ -2,13 +2,13 @@
 
 namespace app\shell;
 
-use app\common\Redis;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
 
 use app\common\model\OrderprepareModel;
 use think\Db;
+use app\common\Redis;
 
 class Prepareorder extends Command
 {
