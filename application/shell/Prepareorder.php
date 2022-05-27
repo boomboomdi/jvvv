@@ -67,7 +67,7 @@ class Prepareorder extends Command
                             'doPrepareNum' => $doPrepareNum['data'],
                             'doNum' => $v['prepare_num'],
                             'PrepareOrderKey' => $PrepareOrderKey,
-                            'timeout' => $PrepareOrderKey,
+                            'lastSql' => Db::table("bsa_order_prepare")->getLastSql(),
                             'setRes' => $setRes,
                         ]), 'curlAmountGetJDOrderUrl');
                         if ($doNum > 0) {

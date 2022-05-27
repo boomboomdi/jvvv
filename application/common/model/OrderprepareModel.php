@@ -84,12 +84,12 @@ class OrderprepareModel extends Model
         $where = [];
         $returnCount = 0;
         try {
-
-            $where[] = ['get_url_status', '=', $getUrlStatus];
-            $where[] = ['order_status', '=', $orderStatus];
             if (!empty($amount)) {
                 $where[] = ['amount', '=', $amount];
             }
+            $where[] = ['get_url_status', '=', $getUrlStatus];
+            $where[] = ['order_status', '=', $orderStatus];
+
             $returnCount = $this->where($where)->count();
         } catch (\Exception $e) {
             return modelReMsg(-1, $returnCount, $e->getMessage());
