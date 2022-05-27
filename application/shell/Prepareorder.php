@@ -47,6 +47,9 @@ class Prepareorder extends Command
                         //查询可用订单
                         $canUseNum = $orderPrepareModel->getPrepareOrderNum($v['amount']);
                         $doNum -= $canUseNum;
+                        //查询匹配中订单
+                        $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['amount'], 3);
+                        $doNum -= $doPrepareNum;
                         if ($doNum > 0) {
                             $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['amount'], $doNum);
                             if (!isset($createPrepareOrderRes['code']) || $createPrepareOrderRes['code'] != 0) {
