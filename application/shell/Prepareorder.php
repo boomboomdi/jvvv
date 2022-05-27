@@ -47,11 +47,12 @@ class Prepareorder extends Command
                 foreach ($prepareAmountList as $k => $v) {
                     $redis = new Redis(['index' => 1]);
                     $PrepareOrderKey = "PrepareOrder" . $v['order_amount'];
-                    $setRes = $redis->setnx($PrepareOrderKey, 10);
+                    $setRes = $redis->setnx($PrepareOrderKey, $PrepareOrderKey, 10);
                     logs(json_encode([
                         'order_amount' => $v['order_amount'],
                         'doNum' => $v['prepare_num'],
                         'PrepareOrderKey' => $PrepareOrderKey,
+                        'timeout' => $PrepareOrderKey,
                         'setRes' => $setRes,
                     ]), 'curlAmountGetJDOrderUrl');
                     if ($setRes) {
