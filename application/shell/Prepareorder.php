@@ -38,7 +38,7 @@ class Prepareorder extends Command
                 ->select();
             logs(json_encode([
                 'param' => $prepareAmountList,
-                "insertRes" => count($prepareAmountList)
+                "prepare_num" => count($prepareAmountList)
             ]), 'Prepareorder');
             $prepareSetModel = new PreparesetModel();
             if (!is_array($prepareAmountList) || count($prepareAmountList) == 0) {
@@ -56,8 +56,12 @@ class Prepareorder extends Command
                         //查询匹配中订单
                         $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['order_amount'], 3);
                         $doNum -= $doPrepareNum;
+                        logs(json_encode([
+                            "endTime" => date("Y-m-d H:i:s", time()),
+                            'param' => $v['amount'],
+                            'doNum' => $doNum,
+                        ]), 'curlAmountGetJDOrderUrl');
                         if ($doNum > 0) {
-
                             $checkStartTime = date('Y-m-d H:i:s', time());
                             $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['order_amount'], $doNum);
 
