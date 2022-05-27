@@ -54,13 +54,13 @@ class Timenotifyorder extends Command
                     $db::table('bsa_order')->where($orderWhere)->update($notifying);
                 }
             }
-            $output->writeln("Timenotifyhxiao:订单总数" . $totalNum);
+            $output->writeln("Timenotiforder:订单总数" . $totalNum);
         } catch (\Exception $exception) {
             logs(json_encode(['file' => $exception->getFile(), 'line' => $exception->getLine(), 'errorMessage' => $exception->getMessage()]), 'Timenotifyhxiao_exception');
-            $output->writeln("Timenotifyhxiao:exception");
+            $output->writeln("Timenotiforder:exception");
         } catch (\Error $error) {
             logs(json_encode(['file' => $error->getFile(), 'line' => $error->getLine(), 'errorMessage' => $error->getMessage()]), 'TiTimenotifyhxiao_error');
-            $output->writeln("Timenotifyhxiao:error");
+            $output->writeln("Timenotiforder:error");
         }
 
     }
