@@ -35,6 +35,10 @@ class Prepareorder extends Command
                 ->where("status", "=", 1)
                 ->where("prepare_num", ">", 0)
                 ->select();
+            logs(json_encode([
+                'param' => $prepareAmountList,
+                "insertRes" => count($prepareAmountList)
+            ]), 'Prepareorder');
             if (!is_array($prepareAmountList) || count($prepareAmountList) == 0) {
                 $output->writeln("Prepareorder:无预产任务");
             } else {
