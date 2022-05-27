@@ -17,7 +17,7 @@ class Timecheckorder extends Command
 {
     protected function configure()
     {
-        $this->setName('Timecheckorder')->setDescription('定时查询订单充值手机余额!');
+        $this->setName('Timecheckorder')->setDescription('定时查询订单状态!');
     }
 
     /**
