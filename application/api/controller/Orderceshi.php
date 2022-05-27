@@ -6,6 +6,7 @@ namespace app\api\controller;
 use app\admin\model\WriteoffModel;
 use app\api\validate\OrderhexiaoValidate;
 use app\common\model\OrderexceptionModel;
+use app\common\model\PreparesetModel;
 use app\common\model\SystemConfigModel;
 use think\Controller;
 use think\Db;
@@ -21,7 +22,8 @@ class Orderceshi extends Controller
     {
 
         $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
-        var_dump($orderHxLockTime);exit;
+        var_dump($orderHxLockTime);
+        exit;
     }
 
     public function ceshiAdd()
@@ -49,6 +51,14 @@ class Orderceshi extends Controller
         } else {
             echo($redis->get($account));
         }
+    }
+
+    public function ceshiAdd3()
+    {
+        $prepareSetModel = new PreparesetModel();
+        $res = $prepareSetModel->ceshiRedis();
+        var_dump($res);exit;
+
     }
 
     public function getCeshi()
