@@ -175,22 +175,19 @@ class OrderprepareModel extends Model
     }
 
 
-
-
     /**
      * 京东预拉单
      * @param $checkParam
      * @param $orderNo
      * @return array
      */
-    public function getJDOrderUrl($checkParam, $orderNo)
+    public function getJDOrderUrl($checkParam)
     {
         try {
             $checkStartTime = date('Y-m-d H:i:s', time());
             $notifyResult = curlPostJson("http://127.0.0.1:23942/createOrderAppstore", $checkParam);
 
             logs(json_encode([
-                'writeOrderNo' => $orderNo,  //order_no
                 'param' => $checkParam,
                 "startTime" => $checkStartTime,
                 "endTime" => date("Y-m-d H:i:s", time()),
@@ -253,7 +250,6 @@ class OrderprepareModel extends Model
             return modelReMsg(-22, "", $error->getMessage());
         }
     }
-
 
 
     /**
