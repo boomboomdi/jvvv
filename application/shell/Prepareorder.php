@@ -50,9 +50,9 @@ class Prepareorder extends Command
                     $setRes = $redis->setnx($PrepareOrderKey, 10);
                     logs(json_encode([
                         'order_amount' => $v['order_amount'],
+                        'doNum' => $v['prepare_num'],
                         'PrepareOrderKey' => $PrepareOrderKey,
                         'setRes' => $setRes,
-                        'doNum' => $v['prepare_num']
                     ]), 'curlAmountGetJDOrderUrl');
                     if ($setRes) {
                         $doNum = $v['prepare_num'];
