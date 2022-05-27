@@ -85,7 +85,7 @@ class OrderprepareModel extends Model
         $returnCount = 0;
         try {
             if (!empty($amount)) {
-                $where[] = ['amount', '=', $amount];
+                $where[] = ['order_amount', '=', $amount];
             }
             $where[] = ['get_url_status', '=', $getUrlStatus];
             $where[] = ['order_status', '=', $orderStatus];
