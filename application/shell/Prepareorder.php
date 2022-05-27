@@ -48,6 +48,12 @@ class Prepareorder extends Command
                     $redis = new Redis(['index' => 1]);
                     $PrepareOrderKey = "PrepareOrder" . $v['order_amount'];
                     $setRes = $redis->setnx($PrepareOrderKey, 10);
+                    logs(json_encode([
+                        'order_amount' => $v['order_amount'],
+                        'PrepareOrderKey' => $PrepareOrderKey,
+                        'setRes' => $setRes,
+                        'doNum' => $v['prepare_num']
+                    ]), 'curlAmountGetJDOrderUrl');
                     if ($setRes) {
                         $doNum = $v['prepare_num'];
                         //查询可用订单
@@ -56,11 +62,7 @@ class Prepareorder extends Command
                         //查询匹配中订单
                         $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['order_amount'], 3);
                         $doNum -= $doPrepareNum;
-                        logs(json_encode([
-                            "endTime" => date("Y-m-d H:i:s", time()),
-                            'param' => $v['amount'],
-                            'doNum' => $doNum,
-                        ]), 'curlAmountGetJDOrderUrl');
+
                         if ($doNum > 0) {
                             $checkStartTime = date('Y-m-d H:i:s', time());
                             $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['order_amount'], $doNum);
@@ -69,11 +71,10 @@ class Prepareorder extends Command
                                 logs(json_encode([
                                     "startTime" => $checkStartTime,
                                     "endTime" => date("Y-m-d H:i:s", time()),
-                                    'param' => $v['amount'],
+                                    'param' => $v['order_amount'],
                                     'doNum' => $doNum,
                                     "curlLocalRes" => $createPrepareOrderRes
                                 ]), 'curlGetJDOrderUrlFail');
-                                $redis->delete($PrepareOrderKey);
                             }
                             $redis->delete($PrepareOrderKey);
                         }
