@@ -48,13 +48,7 @@ class Prepareorder extends Command
                     $redis = new Redis(['index' => 1]);
                     $PrepareOrderKey = "prepareOrder" . $v['order_amount'];
                     $setRes = $redis->setnx($PrepareOrderKey, $PrepareOrderKey, 10);
-                    logs(json_encode([
-                        'order_amount' => $v['order_amount'],
-                        'doNum' => $v['prepare_num'],
-                        'PrepareOrderKey' => $PrepareOrderKey,
-                        'timeout' => $PrepareOrderKey,
-                        'setRes' => $setRes,
-                    ]), 'curlAmountGetJDOrderUrl');
+//
                     if ($setRes) {
                         $doNum = $v['prepare_num'];
                         //查询可用订单
@@ -67,7 +61,15 @@ class Prepareorder extends Command
                         if (isset($doPrepareNum['data']) && $doPrepareNum['data'] > 0) {
                             $doNum -= $doPrepareNum['data'];
                         }
-
+                        logs(json_encode([
+                            'order_amount' => $v['order_amount'],
+                            'canUseNum' => $canUseNum['data'],
+                            'doPrepareNum' => $doPrepareNum['data'],
+                            'doNum' => $v['prepare_num'],
+                            'PrepareOrderKey' => $PrepareOrderKey,
+                            'timeout' => $PrepareOrderKey,
+                            'setRes' => $setRes,
+                        ]), 'curlAmountGetJDOrderUrl');
                         if ($doNum > 0) {
                             $checkStartTime = date('Y-m-d H:i:s', time());
                             $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['order_amount'], $doNum);
