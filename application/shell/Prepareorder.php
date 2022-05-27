@@ -55,7 +55,7 @@ class Prepareorder extends Command
                             if (!isset($createPrepareOrderRes['code']) || $createPrepareOrderRes['code'] != 0) {
                                 $redis->delete($PrepareOrderKey);
                             }
-                            redis->delete($PrepareOrderKey);
+                            $redis->delete($PrepareOrderKey);
                         }
                     }
                 }
