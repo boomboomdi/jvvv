@@ -44,15 +44,10 @@ class Prepareorder extends Command
             if (!is_array($prepareAmountList) || count($prepareAmountList) == 0) {
                 $output->writeln("Prepareorder:无预产任务");
             } else {
-
-//                $doPrepareRes = $prepareSetModel->doPrepare($prepareAmountList);
-//                if (isset($doPrepareRes['code']) || $doPrepareRes['code'] != 0) {
-//                    $output->writeln("Prepareorder:预产单处理失败！" . $msg);
-//                }
                 foreach ($prepareAmountList as $k => $v) {
                     $redis = new Redis(['index' => 1]);
-                    $PrepareOrderKey = "PrepareOrder" . $v['account'];
-                    $setRes = $redis->setnx($PrepareOrderKey, $v['account'], 10);
+                    $PrepareOrderKey = "PrepareOrder" . $v['amount'];
+                    $setRes = $redis->setnx($PrepareOrderKey, 10);
                     if ($setRes) {
                         $doNum = $v['prepare_num'];
                         //查询可用订单
