@@ -92,7 +92,7 @@ class OrderprepareModel extends Model
             }
             $returnCount = $this->where($where)->count();
         } catch (\Exception $e) {
-            return modelReMsg(-1, '', $e->getMessage());
+            return modelReMsg(-1, $returnCount, $e->getMessage());
         }
         return modelReMsg(0, $returnCount, '获取成功！');
     }

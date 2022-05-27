@@ -59,10 +59,14 @@ class Prepareorder extends Command
                         $doNum = $v['prepare_num'];
                         //查询可用订单
                         $canUseNum = $orderPrepareModel->getPrepareOrderNum($v['order_amount']);
-                        $doNum -= $canUseNum;
+                        if (isset($canUseNum['data']) && $canUseNum['data'] > 0) {
+                            $doNum -= $canUseNum['data'];
+                        }
                         //查询匹配中订单
                         $doPrepareNum = $orderPrepareModel->getPrepareOrderNum($v['order_amount'], 3);
-                        $doNum -= $doPrepareNum;
+                        if (isset($doPrepareNum['data']) && $doPrepareNum['data'] > 0) {
+                            $doNum -= $doPrepareNum['data'];
+                        }
 
                         if ($doNum > 0) {
                             $checkStartTime = date('Y-m-d H:i:s', time());
