@@ -11,7 +11,7 @@ namespace app\admin\controller;
 use think\Db;
 use tool\Log;
 
-use app\admin\model\Orderhexiaomodel;
+use app\admin\model\PrepareorderModel;
 
 class Prepareorder extends Base
 {
@@ -77,8 +77,8 @@ class Prepareorder extends Base
             if ($writeOffNodeId == 8) {
                 $where[] = ['write_off_sign', '=', session("admin_user_name")];   //默认情况下 登录名就是
             }
-            $orderhexiaomodel = new Orderhexiaomodel();
-            $list = $orderhexiaomodel->getOrders($limit, $where);
+            $prepareorderModel = new PrepareorderModel();
+            $list = $prepareorderModel->getLists($limit, $where);
 //            var_dump(Db::table("bsa_order_hexiao")->getLastSql());
 //            exit;
             $data = empty($list['data']) ? array() : $list['data'];
