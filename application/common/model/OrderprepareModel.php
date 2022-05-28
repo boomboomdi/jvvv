@@ -191,7 +191,7 @@ class OrderprepareModel extends Model
                 'param' => $checkParam,
                 "startTime" => $checkStartTime,
                 "endTime" => date("Y-m-d H:i:s", time()),
-                "checkAmountResult" => $notifyResult
+                "prepareOrderResult" => $notifyResult
             ]), 'curlGetJDOrderUrl');
 
             if (!is_string($notifyResult) || $notifyResult != "success") {
