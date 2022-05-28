@@ -3,11 +3,8 @@
 namespace app\common\model;
 
 use app\admin\model\CookieModel;
-use app\api\model\OrderLog;
-use app\api\validate\OrderinfoValidate;
-use app\common\model\AsyncModel;
+use app\common\model\SystemConfigModel;
 use think\Db;
-use think\facade\Log;
 use think\Model;
 
 class OrderprepareModel extends Model
@@ -86,6 +83,12 @@ class OrderprepareModel extends Model
         try {
             if (!empty($amount)) {
                 $where[] = ['order_amount', '=', $amount];
+            }
+            $orderLimitTime = SystemConfigModel::getOrderLockTime();
+
+            $where[] = ['add_time', '>', time() - $orderLimitTime];
+            if ($getUrlStatus == 3) {
+                $where[] = ['add_time', '>', time() - 30];
             }
             $where[] = ['get_url_status', '=', $getUrlStatus];
             $where[] = ['order_status', '=', $orderStatus];

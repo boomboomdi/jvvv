@@ -45,27 +45,15 @@ class Prepareorder extends Base
             if (!empty(input('param.operator'))) {
                 $where[] = ['operator', '=', input('param.operator')];
             }
-//            if (!empty($param['order_status'])) {
-//                $where[] = ['order_status', '=', $param['order_status']];
-//            }
-            if (isset($param['order_status']) && $param['order_status'] >= 0) {
+            if (!empty($param['order_status'])) {
                 $where[] = ['order_status', '=', $param['order_status']];
-//                var_dump($param);
-//                exit;
-//                if (input('param.order_status') === 0) {
-//                    $where[] = ['order_status', '=', 0];
-//                } else {
-//                    $where[] = ['order_status', '=', input('param.order_status')];
-//                }
             }
-            if (isset($param['pay_status']) && $param['pay_status'] >= 0) {
+            if (!empty($param['pay_status'])) {
                 $where[] = ['pay_status', '=', $param['pay_status']];
             }
-            if (isset($param['notify_status']) && $param['notify_status'] >= 0) {
-                $where[] = ['notify_status', '=', $param['notify_status']];
+            if (!empty($param['notify_status'])) {
+                $where[] = ['notify_status', '=', $param['pay_status']];
             }
-//            var_dump($where);
-//            exit;
             if (!empty($startTime)) {
                 $where[] = ['add_time', '>', strtotime($startTime)];
             }
