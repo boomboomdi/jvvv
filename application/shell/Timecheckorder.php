@@ -75,6 +75,7 @@ class Timecheckorder extends Command
                             }
                             logs(json_encode([
                                 "order_no" => $v['order_no'],
+                                "order_pay" => $v['order_pay'],
                                 "startTime" => $checkStartTime,
                                 "endTime" => date("Y-m-d H:i:s", time()),
                                 "getPhoneAmountRes" => $checkOrderStatusRes

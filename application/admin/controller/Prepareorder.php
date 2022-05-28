@@ -52,7 +52,7 @@ class Prepareorder extends Base
                 $where[] = ['pay_status', '=', $param['pay_status']];
             }
             if (!empty($param['notify_status'])) {
-                $where[] = ['notify_status', '=', $param['pay_status']];
+                $where[] = ['notify_status', '=', $param['notify_status']];
             }
             if (!empty($startTime)) {
                 $where[] = ['add_time', '>', strtotime($startTime)];
