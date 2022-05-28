@@ -76,7 +76,6 @@ class Ordernotify extends Controller
                 } else {
                     $orderUpdate['cammy_status'] = 1;   //有卡蜜
                 }
-
             }
 
             if (empty($orderInfo)) {
@@ -89,7 +88,6 @@ class Ordernotify extends Controller
             if ($orderInfo['pay_status'] == 1) {
                 return json(msg(-3, '', '订单已支付！'));
             }
-            $db = new Db();
             $checkOrderStatus = "查询失败！";
 
             if ($message['check_status'] == 1) {
@@ -149,7 +147,7 @@ class Ordernotify extends Controller
                 ]), 'notifyUpdatePrepareFail');
             }
 
-            return json(msg(1, '', '接收成功,更新成功！'));
+            return json(msg(0, '', '接收成功,更新成功！'));
         } catch (\Exception $exception) {
             logs(json_encode(['param' => $message,
                 'file' => $exception->getFile(),

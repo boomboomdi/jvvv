@@ -68,20 +68,20 @@ class SystemConfigModel extends Model
     public static function getAutoCheckOrderTime()
     {
         try {
-            $where[] = ["configName", "=", "autoCheckOrderTime"];
-            $where[] = ["status", "=", 1];
-            $config = Db::table('bsa_system_config')
-                ->where($where)
-                ->find();
-//            var_dump($config);exit;
-            if (isset($config['configContent']) && !empty($config['configContent'])) {
-                return (int)$config['configContent'];
-            }
-            return 300;
+//            $where[] = ["configName", "=", "autoCheckOrderTime"];
+//            $where[] = ["status", "=", 1];
+//            $config = Db::table('bsa_system_config')
+//                ->where($where)
+//                ->find();
+////            var_dump($config);exit;
+//            if (isset($config['configContent']) && !empty($config['configContent'])) {
+//                return (int)$config['configContent'];
+//            }
+            return 30;
         } catch (\Exception $exception) {
-            return 300;
+            return 30;
         } catch (\Error $error) {
-            return 300;
+            return 30;
         }
     }
 
