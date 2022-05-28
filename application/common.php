@@ -43,7 +43,7 @@ function getJdCookieAccount($cookie)
     $cookie2 = substr($cookie, $start);
     $end = strpos($cookie2, ';');
     $return = substr($cookie2, 0, $end);
-    return $return;
+    return (string)$return;
 }
 
 /**
