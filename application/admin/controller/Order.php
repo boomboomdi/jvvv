@@ -136,8 +136,21 @@ class Order extends Base
                 $orderUpdate['order_desc'] = "手动回调";                      //备注
                 $updateRes = Db::table("bsa_order")->where("id", $id)
                     ->update($orderUpdate);
-                if(!$updateRes){
-                    return json(modelReMsg(-5, '', '更新失败!'));
+                if (!$updateRes) {
+                    return json(modelReMsg(-5, '', '更新失败!-5'));
+                }
+                if (!empty($orderData['order_me'])) {
+                    //更新预拉单表
+                    $updatePrepareOrderWhere['order_me'] = $orderData['order_me'];
+                    $updatePrepareOrder['pay_time'] = time();
+                    $updatePrepareOrder['order_desc'] = "支付成功！";
+                    $updatePrepareOrder['pay_status'] = 1;
+                    $updatePrepareOrder['pay_amount'] = $orderData['amount'];
+                    $updatePrepareOrderRes = Db::table("bsa_order_prepare")
+                        ->where($updatePrepareOrderWhere)->update($updatePrepareOrder);
+                    if(!$updatePrepareOrderRes){
+                        return json(modelReMsg(-6, '', '更新预拉单失败!-6'));
+                    }
                 }
                 return json(modelReMsg(1000, '', '回调成功'));
             } else {
