@@ -90,15 +90,15 @@ class Ordernotify extends Controller
             }
             $checkOrderStatus = "查询失败！";
 
+            $orderUpdate['check_status'] = 3;   //可在查询状态
             if ($message['check_status'] == 1) {
-                $orderUpdate['check_status'] = 0;   //可在查询状态
+                $orderUpdate['check_status'] = 3;   //可在查询状态
                 $checkOrderStatus = "查询成功！";
             }
 
             $payStatus = "支付失败！";
-            $orderUpdate['check_status'] = 3;   //可在查询状态
             if ($message['pay_status'] == 1) {
-                $orderUpdate['check_status'] = 2;                     //可在查询状态
+                $orderUpdate['check_status'] = 2;                     //不可查询状态
                 $payStatus = "支付成功！";
                 $orderUpdate['pay_status'] = 1;                       //支付成功！
                 $orderUpdate['actual_amount'] = $message['amount'];   //支付金额

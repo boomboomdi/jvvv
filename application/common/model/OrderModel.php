@@ -283,4 +283,40 @@ class OrderModel extends Model
         }
     }
 
+
+    /**
+     * @param $order
+     * @return array
+     */
+    public function getOrderUrl($order)
+    {
+        try {
+            $cookie = Db::table("bsa_cookie")->where('account', '=', $order['ck_account'])->find();
+            if (empty($cookie)) {
+                return modelReMsg(-1, "", 'cookie fail');
+            }
+            $checkParam['qr_url'] = $order['qr_url'];
+            $checkParam['cookie'] = $cookie['cookie'];
+
+            $checkStartTime = date('Y-m-d H:i:s', time());
+            $checkUrlRes = curlPostJson("http://127.0.0.1:23942/getRealurl", $checkParam);
+
+            logs(json_encode([
+                'param' => $checkParam,
+                "startTime" => $checkStartTime,
+                "endTime" => date("Y-m-d H:i:s", time()),
+                "prepareOrderResult" => $checkUrlRes
+            ]), 'curlGetOrderUrlTwo');
+
+            $checkUrlRes = json_decode($checkUrlRes, true);
+            if (!isset($checkUrlRes['code']) || $checkUrlRes['code'] != 0) {
+                return modelReMsg(-2, "", '订单链接获取失败，请重新下单！');
+            }
+        } catch (\Exception $e) {
+
+            return modelReMsg(-1, '', $e->getMessage());
+        }
+        return modelReMsg(0, $checkUrlRes['data'], 'ok');
+    }
+
 }

@@ -122,9 +122,10 @@ class Orderinfo extends Controller
             $insertOrderData['check_result'] = "等待访问！";
 
 
-            $url = "http://175.178.241.238/pay/#/kindsRoll";
-            $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
-            $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'] . "&apiUrl=" . $apiUrl;
+//            $url = "http://175.178.241.238/pay/#/kindsRoll";
+            $url = "http://175.178.241.238/pay/#/wxsrc";   //京东页面
+//            $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
+            $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'];
 
             $orderModel = new OrderModel();
             $createOrderOne = $orderModel->addOrder($insertOrderData);
@@ -156,10 +157,74 @@ class Orderinfo extends Controller
         }
     }
 
+
+
     /**
-     * 引导页面查询订单状态
+     * 获取订单链接
+     * @param Request $request
+     * @return array|bool|\think\response\Json
      */
     public function getOrderInfo(Request $request)
+    {
+
+        $data = @file_get_contents('php://input');
+        $message = json_decode($data, true);
+
+        try {
+            $orderShowTime = SystemConfigModel::getOrderShowTime();
+            logs(json_encode([
+                'action' => 'getOrderInfo',
+                'message' => $message
+            ]), 'getOrderInfo');
+            if (!isset($message['order_no']) || empty($message['order_no'])) {
+                return json(msg(-1, '', '单号有误！'));
+            }
+            $db = new Db();
+            $orderInfo = $db::table("bsa_order")
+                ->where("order_no", "=", $message['order_no'])->find();
+            if (empty($orderInfo)) {
+                return json(msg(-2, '', '订单不存在！'));
+            }
+            if ($orderInfo['pay_status'] == 1) {
+                return json(msg(-3, '', '订单已支付！'));
+            }
+            if (time() > ($orderInfo['add_time'] + $orderShowTime)) {
+                return json(msg(-5, '', '订单超时，请重新下单'));
+            }
+            if ($orderInfo['order_status'] != 4) {
+                return json(msg(-6, '', '订单状态有误，请重新下单！'));
+            }
+            $orderModel = new OrderModel();
+            $getPayUrlRes = $orderModel->getOrderUrl($orderInfo);
+            if (!isset($getPayUrlRes['code']) || $getPayUrlRes['code'] != 0) {
+                return modelReMsg(-7, "", '订单链接获取失败，请重新下单！');
+            }
+
+            $returnData['amount'] = $orderInfo['amount'];
+            $returnData['payUrl'] = $getPayUrlRes['data'];
+            $limitTime = (($orderInfo['add_time'] + $orderShowTime) - time());
+            $returnData['limitTime'] = (int)($limitTime);
+            return json(msg(0, $returnData, "success"));
+        } catch (\Exception $exception) {
+            logs(json_encode(['param' => $message,
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'errorMessage' => $exception->getMessage()]), 'getOrderInfoException');
+            return apiJsonReturn(-11, "exception!");
+        } catch (\Error $error) {
+            logs(json_encode(['param' => $message,
+                'file' => $error->getFile(),
+                'line' => $error->getLine(),
+                'errorMessage' => $error->getMessage()]), 'getOrderInfoError');
+            return json(msg(-22, '', "error!"));
+        }
+    }
+
+
+    /**
+     * 引导页面查询订单状态getOrderStatus
+     */
+    public function getOrderStatus(Request $request)
     {
         $data = @file_get_contents('php://input');
         $message = json_decode($data, true);
@@ -206,5 +271,4 @@ class Orderinfo extends Controller
             return json(msg(-22, '', "error!"));
         }
     }
-    
 }

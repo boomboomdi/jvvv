@@ -114,21 +114,31 @@ class Order extends Base
                     return json(modelReMsg(-1, '', '参数错误!'));
                 }
                 //查询订单
-                $order = Db::table("bsa_order")->where("id", $id)->find();
-                if (empty($order)) {
+                $orderData = Db::table("bsa_order")->where("id", $id)->find();
+                if (empty($orderData)) {
                     return json(modelReMsg(-2, '', '回调订单有误!'));
                 }
-                $orderModel = new OrderModel();
+//                $orderModel = new OrderModel();
 
-                $orderWhere['order_me'] = $order['order_me'];
-                $orderData = $orderModel->where($orderWhere)->find();
+//                $orderWhere['order_me'] = $order['order_me'];
+//                $orderData = $orderModel->where($orderWhere)->find();
                 if (empty($orderData) || $orderData['pay_status'] == 1) {
                     return json(modelReMsg(-3, '', '此订单不可回调!'));
                 }
                 if ($orderData['pay_status'] == 1) {
-                    return json(modelReMsg(-3, '', '此订单不可回调!'));
+                    return json(modelReMsg(-4, '', '已支付订单不可回调!'));
                 }
-
+                $orderUpdate['pay_status'] = 1;                         //支付成功！
+                $orderUpdate['check_status'] = 2;                       //不可查询状态
+                $orderUpdate['actual_amount'] = $orderData['amount'];   //支付金额
+                $orderUpdate['pay_time'] = time();                      //支付 时间
+                $orderUpdate['check_result'] = "手动回调" . session('admin_user_name');                      //支付 时间
+                $orderUpdate['order_desc'] = "手动回调";                      //备注
+                $updateRes = Db::table("bsa_order")->where("id", $id)
+                    ->update($orderUpdate);
+                if(!$updateRes){
+                    return json(modelReMsg(-5, '', '更新失败!'));
+                }
                 return json(modelReMsg(1000, '', '回调成功'));
             } else {
                 return json(modelReMsg(-99, '', '访问错误'));
