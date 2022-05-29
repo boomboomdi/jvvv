@@ -30,7 +30,7 @@ class Preparenotify extends Controller
                 'startTime' => date("Y-m-d H:i:s", time())
             ]), 'notifyJDUrl0069');
             $validate = new NotifyjdurlValidate();
-            if (!$validate->check($message)) {
+            if (!$validate->scene('order')->check($message)) {
                 return json(msg(-1, '', $validate->getError()));
             }
             $orderPrepareModel = new OrderprepareModel();
@@ -55,9 +55,8 @@ class Preparenotify extends Controller
                 'message' => $message,
             ]), 'timeNotifyJDUrl0069');
 
-            $update['qr_url'] = $message['qr_url'];
+
             $update['get_url_time'] = time();
-            $update['order_pay'] = $message['order_pay'];
             $update['status'] = 3;  //等待匹配
             $update['get_url_status'] = 1;   //预拉成功
             $update['order_desc'] = "预拉成功！";
@@ -66,6 +65,12 @@ class Preparenotify extends Controller
             if ($message['prepare_status'] != 1) {
                 $update['get_url_status'] = 2;  //预拉失败
                 $update['order_desc'] = "拉单失败！";
+            } else {
+                if (!$validate->scene('orderSuccess')->check($message)) {
+                    return json(msg(-5, '', $validate->getError()));
+                }
+                $update['qr_url'] = $message['qr_url'];
+                $update['order_pay'] = $message['order_pay'];
             }
             //ck失效
             if ($message['ck_status'] != 1) {
@@ -75,7 +80,6 @@ class Preparenotify extends Controller
                 $cookieUpdate['status'] = 2;
                 $cookieModel->editCookie($cookieWhere, $cookieUpdate);
             }
-
             $updateRes = Db::table("bsa_order_prepare")->where($orderWhere)->update($update);
             if (!$updateRes) {
                 $redis->delete($PrepareUrlNotifyKey);

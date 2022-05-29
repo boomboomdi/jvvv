@@ -197,7 +197,6 @@ class Order extends Base
                     return json(modelReMsg(-6, '', '请于' . (300 - (time() - $order['add_time'])) . "秒后查询！"));
                 }
 
-
                 Db::startTrans();
                 //查询核销 并加行锁
 

@@ -27,5 +27,10 @@ class NotifyjdurlValidate extends Validate
 //        'qr_url.activeUrl' => 'qr_url format error',
     ];
 
+    protected $scene = [
+        'order' => ['prepare_status', 'ck_status', 'order_me', 'amount'],
+        'orderSuccess' => ['order_pay', 'qr_url']
+    ];
+
 
 }
