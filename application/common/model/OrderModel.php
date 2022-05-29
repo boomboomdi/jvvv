@@ -305,7 +305,7 @@ class OrderModel extends Model
                 'param' => $checkParam,
                 "startTime" => $checkStartTime,
                 "endTime" => date("Y-m-d H:i:s", time()),
-                "prepareOrderResult" => $checkUrlRes
+                "getOrderUrlRes" => $checkUrlRes
             ]), 'curlGetOrderUrlTwo');
 
             $checkUrlRes = json_decode($checkUrlRes, true);
