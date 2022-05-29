@@ -124,9 +124,8 @@ class Orderinfo extends Controller
 
 //            $url = "http://175.178.241.238/pay/#/kindsRoll";
             $url = "http://175.178.241.238/pay/#/wxsrc";   //京东页面
-//            $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
-            $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'];
-
+            $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
+            $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'] . "&apiUrl=" . $apiUrl;
             $orderModel = new OrderModel();
             $createOrderOne = $orderModel->addOrder($insertOrderData);
             if (!isset($createOrderOne['code']) || $createOrderOne['code'] != 0) {
