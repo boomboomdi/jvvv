@@ -64,6 +64,7 @@ class Orderinfo extends Controller
                 return apiJsonReturn(-5, "该订单号已存在！");
             }
             $orderLimitTime = SystemConfigModel::getOrderLockTime();
+            $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
             $db::startTrans();
             $hxOrderData = $db::table("bsa_order_prepare")
                 ->where('order_amount', '=', $message['amount'])
@@ -72,7 +73,7 @@ class Orderinfo extends Controller
                 ->where('get_url_status', '=', 1)       //预拉成功
                 ->where('order_limit_time', '=', 0)
                 ->where('check_status', '<>', 1)        //是否查单使用中
-                ->where('add_time', '>', time() - $orderLimitTime) //  匹配当前时间在 核销限制回调时间480s之前的核销单
+                ->where('add_time', '>', time() - $orderHxLockTime) //  匹配当前时间在 核销限制回调时间480s之前的核销单
                 ->order("add_time asc")
                 ->lock(true)
                 ->find();
@@ -80,8 +81,6 @@ class Orderinfo extends Controller
                 $db::rollback();
                 return apiJsonReturn(-5, "无可用订单-5！！");
             }
-
-            $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
             $hxWhere['id'] = $hxOrderData['id'];
             $hxWhere['order_me'] = $hxOrderData['order_me'];
             $updateMatch['status'] = 1;           //使用中

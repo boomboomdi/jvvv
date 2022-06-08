@@ -16,7 +16,7 @@ class SystemConfigModel extends Model
 
 
     /**
-     * 订单冻结期
+     * 核销单冻结期
      * @return int
      */
     public static function getOrderLockTime()
@@ -45,15 +45,15 @@ class SystemConfigModel extends Model
     public static function getOrderHxLockTime()
     {
         try {
-            $where[] = ["configName", "=", "orderHxLockTime"];
-            $where[] = ["status", "=", 1];
-            $config = Db::table('bsa_system_config')
-                ->where($where)
-                ->find();
-            if (isset($config['configContent']) && !empty($config['configContent'])) {
-                return (int)$config['configContent'];
-            }
-            return 1800;
+//            $where[] = ["configName", "=", "orderHxLockTime"];
+//            $where[] = ["status", "=", 1];
+//            $config = Db::table('bsa_system_config')
+//                ->where($where)
+//                ->find();
+//            if (isset($config['configContent']) && !empty($config['configContent'])) {
+//                return (int)$config['configContent'];
+//            }
+            return 43200;
         } catch (\Exception $exception) {
             return 1800;
         } catch (\Error $error) {
