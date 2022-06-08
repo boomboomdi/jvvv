@@ -84,9 +84,10 @@ class OrderprepareModel extends Model
             if (!empty($amount)) {
                 $where[] = ['order_amount', '=', $amount];
             }
-            $orderLimitTime = SystemConfigModel::getOrderLockTime();
 
-            $where[] = ['add_time', '>', time() - $orderLimitTime];
+            $orderHxLockTime = SystemConfigModel::getOrderLockTime();
+
+            $where[] = ['add_time', '>', time() - $orderHxLockTime];
             if ($getUrlStatus == 3) {
                 $where[] = ['add_time', '>', time() - 30];
             }
