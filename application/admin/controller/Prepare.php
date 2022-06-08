@@ -10,6 +10,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\PrepareModel;
+use app\common\model\SystemConfigModel;
 use think\Db;
 use app\admin\validate\PrepareValidate;
 use app\common\model\OrderdouyinModel;
@@ -31,6 +32,8 @@ class Prepare extends Base
             }
             $db = new Db();
             $model = new PrepareModel();
+
+            $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
             $list = $model->getPrepareLists($limit, $where);
             $data = empty($list['data']) ? array() : $list['data'];
             foreach ($data as $key => $vo) {
@@ -40,6 +43,7 @@ class Prepare extends Base
                     ->where('get_url_status', '=', 1)
                     ->where('order_status', '=', 3)   //等待匹配
                     ->where('order_amount', '=', $vo['order_amount'])
+                    ->where('get_url_time', '>', time() - $orderHxLockTime)
                     ->count();
 
                 $doPrepareNum = $db::table("bsa_order_prepare")
