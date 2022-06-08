@@ -41,7 +41,7 @@ class Index extends Base
     public function home()
     {
         $db = new Db();
-        $orderLimitTime = SystemConfigModel::getOrderLockTime();
+        $orderLimitTime = SystemConfigModel::getOrderHxLockTime();
         //订单数量   //
         $orderNum = $db::table("bsa_order")->count();
         //回调数量
