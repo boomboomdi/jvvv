@@ -45,37 +45,40 @@ class Index extends Base
         //订单数量   //
         $orderNum = $db::table("bsa_order")->count();
         //回调数量
-        $payOrderNum = $db::table("bsa_order")->where('order_status', '=', 1)->count();
+        $payOrderNum = $db::table("bsa_order")->where('pay_status', '=', 1)->count();
         //手动回调数量
         $notifyPayOrderNum = $db::table("bsa_order")->where('order_status', '=', 5)->count();
         $successOrderRate = makeSuccessRate(((int)$payOrderNum + (int)$notifyPayOrderNum), (int)$orderNum);
         //回调金额
-        $payOrderAmount = $db::table("bsa_order")->where('order_status', '=', 1)->sum('actual_amount');
+        $payOrderAmount = $db::table("bsa_order")
+            ->where('pay_status', '=', 1)
+            ->where('notify_status', '=', 1)
+            ->sum('actual_amount');
         //核销单总量
-        $tOrderNum = $db::table("bsa_order_hexiao")->count();
+        $tOrderNum = $db::table("bsa_order_prepare")->count();
         //可下单数量
-        $noUseTOrderNum = $db::table("bsa_order_hexiao")
-            ->where("pay_status", '=', 0)
-            ->where("order_status", '=', 0)
-            ->where("status", '=', 0)
+        $noUseTOrderNum = $db::table("bsa_order_prepare")
+            ->where("pay_status", '=', 3)
+            ->where("order_status", '=', 3)
+//            ->where("status", '=', 0)
             ->where('limit_time', '>', time() + $orderLimitTime)
             ->count();
         //可下单数量
-        $canUseTOrderNum = $db::table("bsa_order_hexiao")
-            ->where("pay_status", '=', 0)
-            ->where("order_status", '=', 0)
-            ->where("status", '=', 0)
+        $canUseTOrderNum = $db::table("bsa_order_prepare")
+            ->where("pay_status", '=', 3)
+            ->where("order_status", '=', 3)
+//            ->where("status", '=', 0)
             ->where('limit_time', '>', time() + $orderLimitTime)
             ->count();
         //已使用数量
-        $usedTOrderNum = $db::table("bsa_order_hexiao")
-//            ->where('order_me', '<>', null)
+        $usedTOrderNum = $db::table("bsa_order_prepare")
+            ->where('order_no', '<>', null)
             ->where('status', '<>', 1)
             ->where('order_status', '=', 1)
 //            ->where('limit_time', '>', time())
             ->count();
         //支付数量
-        $payTOrderNum = $db::table("bsa_order_hexiao")
+        $payTOrderNum = $db::table("bsa_order_prepare")
             ->where('order_status', '=', 1)
             ->where('pay_status', '=', 1)
             ->count();
