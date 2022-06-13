@@ -59,7 +59,7 @@ class Ordernotify extends Controller
                 if (!$validate->scene('payNotify')->check($message)) {
                     return apiJsonReturn(-5, '', $validate->getError());
                 }
-                $cammyData['card_user'] = $message['card_user'];
+                $cammyData['card_name'] = $message['card_name'];
                 $cammyData['order_me'] = $message['order_me'];
                 $cammyData['card_password'] = $message['card_password'];
                 $cammyData['add_time'] = time();
