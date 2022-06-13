@@ -99,7 +99,7 @@ class Orderinfo extends Controller
 
 
 //            $url = "http://175.178.241.238/pay/#/kindsRoll";
-            $url = "http://175.178.241.238/pay/#/wxsrc";   //京东页面
+            $url = "http://175.178.241.238/pay/#/jdios";   //京东页面
             $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
             $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'] . "&apiUrl=" . $apiUrl;
             $orderModel = new OrderModel();
@@ -228,7 +228,6 @@ class Orderinfo extends Controller
                     }
                     $orderUpdate['order_status'] = 4;
                     $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述
-                    $orderUpdate['qr_url'] = $hxOrderData['qr_url'];           //支付链接
                     $orderUpdate['order_me'] = $hxOrderData['order_me'];       //本平台订单号
                     $orderUpdate['order_pay'] = $hxOrderData['order_pay'];     //抖音单号
                     $orderUpdate['ck_account'] = $hxOrderData['ck_account'];   //cookie account
