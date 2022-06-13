@@ -30,11 +30,11 @@ class SystemConfigModel extends Model
 //            if (isset($config['configContent']) && !empty($config['configContent'])) {
 //                return (int)$config['configContent'];
 //            }
-            return 1800;
+            return 180;
         } catch (\Exception $exception) {
-            return 1800;
+            return 300;
         } catch (\Error $error) {
-            return 1800;
+            return 300;
         }
     }
 
@@ -58,6 +58,29 @@ class SystemConfigModel extends Model
             return 1800;
         } catch (\Error $error) {
             return 1800;
+        }
+    }
+
+    /**
+     * 订单冻结期
+     * @return int
+     */
+    public static function getOrderHxCanUseTime()
+    {
+        try {
+//            $where[] = ["configName", "=", "orderHxLockTime"];
+//            $where[] = ["status", "=", 1];
+//            $config = Db::table('bsa_system_config')
+//                ->where($where)
+//                ->find();
+//            if (isset($config['configContent']) && !empty($config['configContent'])) {
+//                return (int)$config['configContent'];
+//            }
+            return 300;
+        } catch (\Exception $exception) {
+            return 300;
+        } catch (\Error $error) {
+            return 300;
         }
     }
 

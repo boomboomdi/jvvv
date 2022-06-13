@@ -34,6 +34,7 @@ class Prepare extends Base
             $model = new PrepareModel();
 
             $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
+            $orderHxCanUseTime = SystemConfigModel::getOrderHxCanUseTime();
             $list = $model->getPrepareLists($limit, $where);
             $data = empty($list['data']) ? array() : $list['data'];
             foreach ($data as $key => $vo) {
@@ -43,7 +44,7 @@ class Prepare extends Base
                     ->where('get_url_status', '=', 1)
                     ->where('order_status', '=', 3)   //等待匹配
                     ->where('order_amount', '=', $vo['order_amount'])
-                    ->where('get_url_time', '>', time() - $orderHxLockTime)
+                    ->where('get_url_time', '>', time() - $orderHxCanUseTime)
                     ->count();
 
                 $doPrepareNum = $db::table("bsa_order_prepare")

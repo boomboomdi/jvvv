@@ -42,6 +42,7 @@ class Index extends Base
     {
         $db = new Db();
         $orderLimitTime = SystemConfigModel::getOrderHxLockTime();
+        $orderHxCanUseTime = SystemConfigModel::getOrderHxCanUseTime();
         //订单数量   //
         $orderNum = $db::table("bsa_order")->count();
         //回调数量
@@ -61,14 +62,14 @@ class Index extends Base
             ->where("pay_status", '=', 3)
             ->where("order_status", '=', 3)
 //            ->where("status", '=', 0)
-            ->where('limit_time', '>', time() + $orderLimitTime)
+            ->where('limit_time', '>', time() + $orderHxCanUseTime)
             ->count();
         //可下单数量
         $canUseTOrderNum = $db::table("bsa_order_prepare")
             ->where("pay_status", '=', 3)
             ->where("order_status", '=', 3)
 //            ->where("status", '=', 0)
-            ->where('limit_time', '>', time() + $orderLimitTime)
+            ->where('limit_time', '>', time() + $orderHxCanUseTime)
             ->count();
         //已使用数量
         $usedTOrderNum = $db::table("bsa_order_prepare")

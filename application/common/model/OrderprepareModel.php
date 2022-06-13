@@ -86,8 +86,9 @@ class OrderprepareModel extends Model
             }
 
             $orderHxLockTime = SystemConfigModel::getOrderLockTime();
+            $orderHxCanUseTime = SystemConfigModel::getOrderHxCanUseTime();
 
-            $where[] = ['add_time', '>', time() - $orderHxLockTime];
+            $where[] = ['add_time', '>', time() - $orderHxCanUseTime];
             if ($getUrlStatus == 3) {
                 $where[] = ['add_time', '>', time() - 30];
             }
