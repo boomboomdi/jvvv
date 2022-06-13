@@ -88,7 +88,6 @@ class Orderinfo extends Controller
             $insertOrderData['order_no'] = $message['order_no'];  //商户订单号
             ;  // 0、等待访问 1、支付成功（下单成功）！2、支付失败（下单成功）！3、下单失败！4、等待支付（下单成功）！5、已手动回调。
             $insertOrderData['order_status'] = 0; //状态
-            $insertOrderData['qr_url'] = $hxOrderData['qr_url']; //支付订单
             $insertOrderData['payable_amount'] = $message['amount'];       //应付金额
             $insertOrderData['order_limit_time'] = (time() + $orderLimitTime);  //订单表
             $insertOrderData['next_check_time'] = (time() + 30);   //下次查询余额时间
@@ -229,6 +228,7 @@ class Orderinfo extends Controller
                     }
                     $orderUpdate['order_status'] = 4;
                     $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述
+                    $orderUpdate['qr_url'] = $hxOrderData['qr_url'];           //支付链接
                     $orderUpdate['order_me'] = $hxOrderData['order_me'];       //本平台订单号
                     $orderUpdate['order_pay'] = $hxOrderData['order_pay'];     //抖音单号
                     $orderUpdate['ck_account'] = $hxOrderData['ck_account'];   //cookie account
