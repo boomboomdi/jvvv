@@ -32,6 +32,11 @@ class OrderModel extends Model
         return modelReMsg(0, $res, 'ok');
     }
 
+    public function create()
+    {
+
+    }
+
     /**
      * 增加订单
      * @param $Order
@@ -291,6 +296,9 @@ class OrderModel extends Model
     public function getOrderUrl($order)
     {
         try {
+            if(empty($order['ck_account'])){
+                return modelReMsg(-1, "", 'cookie fail');
+            }
             $cookie = Db::table("bsa_cookie")->where('account', '=', $order['ck_account'])->find();
             if (empty($cookie)) {
                 return modelReMsg(-1, "", 'cookie fail');

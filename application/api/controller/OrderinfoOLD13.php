@@ -20,7 +20,7 @@ header("Access-Control-Allow-Credentials:true");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept,Authorization");
 header('Access-Control-Allow-Methods:GET,POST,PUT,DELETE,OPTIONS,PATCH');
 
-class Orderinfo extends Controller
+class OrderinfoOLD13 extends Controller
 {
 
     /**
@@ -81,14 +81,38 @@ class Orderinfo extends Controller
                 $db::rollback();
                 return apiJsonReturn(-5, "无可用订单-5！！");
             }
-
+            $hxWhere['id'] = $hxOrderData['id'];
+            $hxWhere['order_me'] = $hxOrderData['order_me'];
+            $updateMatch['status'] = 1;           //使用中
+            $updateMatch['check_status'] = 2;     //查单中
+            $updateMatch['order_status'] = 1;     //以匹配
+            $updateMatch['use_time'] = time();    //使用时间
+            $updateMatch['last_use_time'] = time();
+            $updateMatch['order_limit_time'] = (time() + $orderHxLockTime);  //匹配成功后锁定
+            $updateMatch['order_status'] = 1;
+            $updateMatch['order_no'] = $message['order_no'];   //四方单号
+            $updateMatch['order_desc'] = "等待访问！";
+            $updateMatch['check_result'] = "等待访问！";
+            $updateHxOrderRes = $db::table("bsa_order_prepare")
+                ->where($hxWhere)
+                ->update($updateMatch);
+            if (!$updateHxOrderRes) {
+                logs(json_encode([
+                    'action' => 'updateMatch',
+                    'hxWhere' => $hxWhere,
+                    'updateMatch' => $updateMatch,
+                    'updateMatchSuccessRes' => $updateHxOrderRes,
+                ]), 'updateMatchSuccessFail');
+                $db::rollback();
+                return apiJsonReturn(-7, '', '下单频繁，请稍后再下-7！');
+            }
+            $insertOrderData['order_status'] = 0;
             //下单成功
             $insertOrderData['merchant_sign'] = $message['merchant_sign'];  //商户
             $insertOrderData['amount'] = $message['amount']; //支付金额
             $insertOrderData['order_no'] = $message['order_no'];  //商户订单号
-            ;  // 0、等待访问 1、支付成功（下单成功）！2、支付失败（下单成功）！3、下单失败！4、等待支付（下单成功）！5、已手动回调。
-            $insertOrderData['order_status'] = 0; //状态
-            $insertOrderData['qr_url'] = $hxOrderData['qr_url']; //支付订单
+            ;  // 0、等待下单 1、支付成功（下单成功）！2、支付失败（下单成功）！3、下单失败！4、等待支付（下单成功）！5、已手动回调。
+            $insertOrderData['order_status'] = 4; //状态
             $insertOrderData['payable_amount'] = $message['amount'];       //应付金额
             $insertOrderData['order_limit_time'] = (time() + $orderLimitTime);  //订单表
             $insertOrderData['next_check_time'] = (time() + 30);   //下次查询余额时间
@@ -134,6 +158,7 @@ class Orderinfo extends Controller
     }
 
 
+
     /**
      * 获取订单链接
      * @param Request $request
@@ -167,95 +192,14 @@ class Orderinfo extends Controller
                 return json(msg(-5, '', '订单超时，请重新下单'));
             }
             if ($orderInfo['order_status'] != 4) {
-                if ($orderInfo['order_status'] == 0) {
-                    $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
-                    $db::startTrans();
-                    $hxOrderData = $db::table("bsa_order_prepare")
-                        ->where('order_amount', '=', $message['amount'])
-                        ->where('status', '=', 3)               //默认初始状态
-                        ->where('order_status', '=', 3)         //等待匹配
-                        ->where('get_url_status', '=', 1)       //预拉成功
-                        ->where('order_limit_time', '=', 0)
-                        ->where('check_status', '<>', 1)        //是否查单使用中
-                        ->where('add_time', '>', time() - $orderHxLockTime) //  匹配当前时间在 核销限制回调时间480s之前的核销单
-                        ->order("add_time asc")
-                        ->lock(true)
-                        ->find();
-                    if (!$hxOrderData) {
-                        $db::rollback();
-                        $orderUpdate['order_desc'] = "匹配失败"; //支付订单
-                        // 0、等待下单 1、支付成功（下单成功）！2、支付失败（下单成功）！3、下单失败！4、等待支付（下单成功）！5、已手动回调。
-                        $orderUpdate['order_status'] = 3;
-                        $updateOrderRes = $db::table("bsa_order")
-                            ->where("order_no", "=", $message['order_no'])
-                            ->update($orderUpdate);
-                        if (!$updateOrderRes) {
-                            logs(json_encode([
-                                'action' => 'updateMatchForOrder',
-                                'orderNo' => $message['order_no'],
-                                'updateMatch' => $hxOrderData,
-                                'updateOrderRes' => $updateOrderRes,
-                            ]), 'updateOrderFailMatchFail');
-                            $db::rollback();
-                            return json(msg(-7, '', '下单频繁，请稍后再下-7！'));
-                        }
-                        $db::commit();
-                        return json(msg(-5, '', '无可用订单-5！'));
-                    }
-                    $hxWhere['id'] = $hxOrderData['id'];
-                    $hxWhere['order_me'] = $hxOrderData['order_me'];
-                    $updateMatch['status'] = 1;           //使用中
-                    $updateMatch['check_status'] = 2;     //查单中
-                    $updateMatch['order_status'] = 1;     //以匹配
-                    $updateMatch['use_time'] = time();    //使用时间
-                    $updateMatch['last_use_time'] = time();
-                    $updateMatch['order_limit_time'] = (time() + $orderHxLockTime);  //匹配成功后锁定
-                    $updateMatch['order_status'] = 1;
-                    $updateMatch['order_no'] = $message['order_no'];   //四方单号
-                    $updateMatch['order_desc'] = "等待访问！";
-                    $updateMatch['check_result'] = "等待访问！";
-                    $updateHxOrderRes = $db::table("bsa_order_prepare")
-                        ->where($hxWhere)
-                        ->update($updateMatch);
-                    if (!$updateHxOrderRes) {
-                        logs(json_encode([
-                            'action' => 'updateMatchForHxOrder',
-                            'hxWhere' => $hxWhere,
-                            'updateMatch' => $updateMatch,
-                            'updateMatchSuccessRes' => $updateHxOrderRes,
-                        ]), 'updateMatchSuccessFail');
-                        $db::rollback();
-                        return apiJsonReturn(-7, '', '下单频繁，请稍后再下-7！');
-                    }
-                    $orderUpdate['order_status'] = 4;
-                    $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述
-                    $orderUpdate['order_me'] = $hxOrderData['order_me'];       //本平台订单号
-                    $orderUpdate['order_pay'] = $hxOrderData['order_pay'];     //抖音单号
-                    $orderUpdate['ck_account'] = $hxOrderData['ck_account'];   //cookie account
-                    $orderUpdate['qr_url'] = $hxOrderData['qr_url']; //支付订单
-                    $updateOrderRes = $db::table("bsa_order")
-                        ->where("order_no", "=", $message['order_no'])
-                        ->update($orderUpdate);
-                    if (!$updateOrderRes) {
-                        logs(json_encode([
-                            'action' => 'updateMatchForOrder',
-                            'orderNo' => $message['order_no'],
-                            'updateMatch' => $hxOrderData,
-                            'updateMatchSuccessRes' => $updateHxOrderRes,
-                        ]), 'updateMatchSuccessFail');
-                        $db::rollback();
-                        return apiJsonReturn(-7, '', '下单频繁，请稍后再下-7！');
-                    }
-                    $db::commit();
-                    $orderInfo = $db::table("bsa_order")
-                        ->where("order_no", "=", $message['order_no'])->find();
-                }
+                return json(msg(-6, '', '订单状态有误，请重新下单！'));
             }
             $orderModel = new OrderModel();
             $getPayUrlRes = $orderModel->getOrderUrl($orderInfo);
             if (!isset($getPayUrlRes['code']) || $getPayUrlRes['code'] != 0) {
                 return modelReMsg(-7, "", '订单链接获取失败，请重新下单！');
             }
+
             $returnData['amount'] = $orderInfo['amount'];
             $returnData['payUrl'] = $getPayUrlRes['data'];
             $limitTime = (($orderInfo['add_time'] + $orderShowTime) - time());
