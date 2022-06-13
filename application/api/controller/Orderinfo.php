@@ -224,7 +224,7 @@ class Orderinfo extends Controller
                             'updateMatchSuccessRes' => $updateHxOrderRes,
                         ]), 'updateMatchSuccessFail');
                         $db::rollback();
-                        return apiJsonReturn(-7, '', '下单频繁，请稍后再下-7！');
+                        return json(msg(-7, '', '下单频繁，请稍后再下-7！'));;
                     }
                     $orderUpdate['order_status'] = 4;
                     $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述

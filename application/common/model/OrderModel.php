@@ -32,10 +32,6 @@ class OrderModel extends Model
         return modelReMsg(0, $res, 'ok');
     }
 
-    public function create()
-    {
-
-    }
 
     /**
      * 增加订单
