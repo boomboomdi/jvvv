@@ -196,10 +196,10 @@ class Orderinfo extends Controller
                                 'updateOrderRes' => $updateOrderRes,
                             ]), 'updateOrderFailMatchFail');
                             $db::rollback();
-                            return json(msg(-7, '', '下单频繁，请稍后再下-7！'));
+                            return json(msg(-101, '', '下单频繁，请稍后再下-101！'));
                         }
                         $db::commit();
-                        return json(msg(-5, '', '无可用订单-5！'));
+                        return json(msg(-102, '', '无可用订单-102！'));
                     }
                     $hxWhere['id'] = $hxOrderData['id'];
                     $hxWhere['order_me'] = $hxOrderData['order_me'];
@@ -224,7 +224,7 @@ class Orderinfo extends Controller
                             'updateMatchSuccessRes' => $updateHxOrderRes,
                         ]), 'updateMatchSuccessFail');
                         $db::rollback();
-                        return json(msg(-7, '', '下单频繁，请稍后再下-7！'));;
+                        return json(msg(-103, '', '下单频繁，请稍后再下103！'));;
                     }
                     $orderUpdate['order_status'] = 4;
                     $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述
@@ -243,7 +243,7 @@ class Orderinfo extends Controller
                             'updateMatchSuccessRes' => $updateHxOrderRes,
                         ]), 'updateMatchSuccessFail');
                         $db::rollback();
-                        return apiJsonReturn(-7, '', '下单频繁，请稍后再下-7！');
+                        return apiJsonReturn(104, '', '下单频繁，请稍后再下-104！');
                     }
                     $db::commit();
                     $orderInfo = $db::table("bsa_order")
