@@ -170,7 +170,7 @@ class Orderinfo extends Controller
                     $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
                     $db::startTrans();
                     $hxOrderData = $db::table("bsa_order_prepare")
-                        ->where('order_amount', '=', $message['amount'])
+                        ->where('order_amount', '=', $orderInfo['amount'])
                         ->where('status', '=', 3)               //默认初始状态
                         ->where('order_status', '=', 3)         //等待匹配
                         ->where('get_url_status', '=', 1)       //预拉成功
