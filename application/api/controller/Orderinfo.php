@@ -227,6 +227,7 @@ class Orderinfo extends Controller
                         return json(msg(-103, '', '下单频繁，请稍后再下103！'));;
                     }
                     $orderUpdate['user_ip'] = getLocationByIp(request()->ip())."|".request()->ip();
+                    $orderUpdate['click_time'] = time();
                     $orderUpdate['order_status'] = 4;
                     $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述
                     $orderUpdate['order_me'] = $hxOrderData['order_me'];       //本平台订单号
