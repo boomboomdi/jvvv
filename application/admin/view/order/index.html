@@ -81,13 +81,13 @@
                 <span class="layui-badge-dot gray"></span>等待支付
                 {{#  } }}
             </script>
-<!--            <script type="text/html" id="cammyStatusTpl">-->
-<!--                {{#  if(d.cammy_status == 1){ }}-->
-<!--                <span class="layui-badge-dot green"></span>收到-->
-<!--                {{#  } else if(d.cammy_status == 2){ }}-->
-<!--                <span class="layui-badge-dot gray"></span>未收-->
-<!--                {{#  } }}-->
-<!--            </script>-->
+            <script type="text/html" id="cammyStatusTpl">
+                {{#  if(d.cammy_status == 1){ }}
+                <span class="layui-badge-dot green"></span>收到
+                {{#  } else if(d.cammy_status == 2){ }}
+                <span class="layui-badge-dot gray"></span>未收
+                {{#  } }}
+            </script>
             <script type="text/html" id="table-seller-admin">
 
                 {if (buttonAuth('order/check'))}
