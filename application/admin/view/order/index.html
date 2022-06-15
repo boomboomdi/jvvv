@@ -72,13 +72,22 @@
                 <span class="layui-badge-dot gray"></span>未回调
                 {{#  } }}
             </script>
-            <script type="text/html" id="cammyStatusTpl">
-                {{#  if(d.cammy_status == 1){ }}
-                <span class="layui-badge-dot green"></span>收到
-                {{#  } else if(d.cammy_status == 2){ }}
-                <span class="layui-badge-dot gray"></span>未收
+            <script type="text/html" id="payStatusTpl">
+                {{#  if(d.pay_status == 1){ }}
+                <span class="layui-badge-dot green"></span>支付成功
+                {{#  } else if(d.pay_status == 2){ }}
+                <span class="layui-badge-dot gray"></span>支付失败
+                {{#  } else if(d.pay_status == 3){ }}
+                <span class="layui-badge-dot gray"></span>等待支付
                 {{#  } }}
             </script>
+<!--            <script type="text/html" id="cammyStatusTpl">-->
+<!--                {{#  if(d.cammy_status == 1){ }}-->
+<!--                <span class="layui-badge-dot green"></span>收到-->
+<!--                {{#  } else if(d.cammy_status == 2){ }}-->
+<!--                <span class="layui-badge-dot gray"></span>未收-->
+<!--                {{#  } }}-->
+<!--            </script>-->
             <script type="text/html" id="table-seller-admin">
 
                 {if (buttonAuth('order/check'))}
@@ -174,6 +183,11 @@
                 field: "order_status",
                 title: "订单状态",
                 align: "center",
+            },{
+                field: "pay_status",
+                title: "支付状态",
+                align: "center",
+                templet: '#payStatusTpl'
             },
                 {
                 field: "notify_status",
