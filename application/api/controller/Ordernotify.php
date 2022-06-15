@@ -101,6 +101,7 @@ class Ordernotify extends Controller
                 $orderUpdate['check_status'] = 2;                     //不可查询状态
                 $payStatus = "支付成功！";
                 $orderUpdate['pay_status'] = 1;                       //支付成功！
+                $orderUpdate['order_status'] = 1;                     //支付成功！
                 $orderUpdate['actual_amount'] = $message['amount'];   //支付金额
                 $orderUpdate['pay_time'] = $message['time'];          //支付 时间
             }
