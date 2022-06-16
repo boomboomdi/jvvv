@@ -301,6 +301,7 @@ class OrderModel extends Model
             }
             $checkParam['qr_url'] = $order['qr_url'];
             $checkParam['cookie'] = $cookie['cookie'];
+            $checkParam['os'] = $order['os'];
 
             $checkStartTime = date('Y-m-d H:i:s', time());
             $checkUrlRes = curlPostJson("http://127.0.0.1:23942/getRealurl", $checkParam);

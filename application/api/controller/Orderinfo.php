@@ -154,6 +154,9 @@ class Orderinfo extends Controller
             if (!isset($message['order_no']) || empty($message['order_no'])) {
                 return json(msg(-1, '', '单号有误！'));
             }
+            if (!isset($message['os']) || empty($message['os'])) {
+                return json(msg(-1, '', '请求有误！'));
+            }
             $db = new Db();
             $orderInfo = $db::table("bsa_order")
                 ->where("order_no", "=", $message['order_no'])->find();
@@ -212,6 +215,9 @@ class Orderinfo extends Controller
                     $updateMatch['order_limit_time'] = (time() + $orderHxLockTime);  //匹配成功后锁定
                     $updateMatch['order_status'] = 1;
                     $updateMatch['order_no'] = $message['order_no'];   //四方单号
+                    //前端请求你新增字段：os（数据为：android或ios）
+                    //你请求我新增字段：os（数据为：android或ios）
+                    $updateMatch['pay_type'] = $message['os'];
                     $updateMatch['order_desc'] = "等待访问！";
                     $updateMatch['check_result'] = "等待访问！";
                     $updateHxOrderRes = $db::table("bsa_order_prepare")
