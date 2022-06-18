@@ -205,7 +205,6 @@ class Orderinfo extends Controller
                         $db::commit();
                         return json(msg(-102, '', '无可用订单-102！'));
                     }
-                    var_dump($orderInfo);exit;
                     $hxWhere['id'] = $hxOrderData['id'];
                     $hxWhere['order_me'] = $hxOrderData['order_me'];
                     $updateMatch['status'] = 1;           //使用中
