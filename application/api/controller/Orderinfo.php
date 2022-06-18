@@ -233,7 +233,7 @@ class Orderinfo extends Controller
                     $orderUpdate['user_ip'] = getLocationByIp(request()->ip())."|".request()->ip();
                     $orderUpdate['click_time'] = time();
                     $orderUpdate['order_status'] = 4;
-                    $orderUpdate['order_desc'] = "匹配成功，请求连接";            //描述
+                    $orderUpdate['order_desc'] = "匹配成功，等待访问";            //描述
                     $orderUpdate['order_me'] = $hxOrderData['order_me'];       //本平台订单号
                     $orderUpdate['order_pay'] = $hxOrderData['order_pay'];     //抖音单号
                     $orderUpdate['ck_account'] = $hxOrderData['ck_account'];   //cookie account
