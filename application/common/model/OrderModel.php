@@ -318,9 +318,21 @@ class OrderModel extends Model
                 return modelReMsg(-2, "", '订单链接获取失败，请重新下单！');
             }
             return modelReMsg(0, $checkUrlRes['data'], 'ok');
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
 
-            return modelReMsg(-1, '', $e->getMessage());
+            logs(json_encode(['file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'errorMessage' => $exception->getMessage()
+            ]), 'getOrderUrlException');
+            return modelReMsg(-11, "", $exception->getMessage());
+        } catch (\Error $error) {
+
+            logs(json_encode([
+                'file' => $error->getFile(),
+                'line' => $error->getLine(),
+                'errorMessage' => $error->getMessage()
+            ]), 'getOrderUrlError');
+            return modelReMsg(-22, "", $error->getMessage());
         }
     }
 
