@@ -317,11 +317,11 @@ class OrderModel extends Model
             if (!isset($checkUrlRes['code']) || $checkUrlRes['code'] != 0) {
                 return modelReMsg(-2, "", '订单链接获取失败，请重新下单！');
             }
+            return modelReMsg(0, $checkUrlRes['data'], 'ok');
         } catch (\Exception $e) {
 
             return modelReMsg(-1, '', $e->getMessage());
         }
-        return modelReMsg(0, $checkUrlRes['data'], 'ok');
     }
 
 }
