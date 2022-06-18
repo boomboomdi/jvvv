@@ -205,6 +205,7 @@ class Orderinfo extends Controller
                         $db::commit();
                         return json(msg(-102, '', '无可用订单-102！'));
                     }
+                    var_dump($orderInfo);exit;
                     $hxWhere['id'] = $hxOrderData['id'];
                     $hxWhere['order_me'] = $hxOrderData['order_me'];
                     $updateMatch['status'] = 1;           //使用中
@@ -228,7 +229,7 @@ class Orderinfo extends Controller
                             'updateMatchSuccessRes' => $updateHxOrderRes,
                         ]), 'updateMatchSuccessFail');
                         $db::rollback();
-                        return json(msg(-103, '', '下单频繁，请稍后再下103！'));
+                        return json(msg(-103, '', '下单频繁，请稍后再下-103！'));
                     }
                     $orderUpdate['user_ip'] = getLocationByIp(request()->ip())."|".request()->ip();
                     $orderUpdate['click_time'] = time();
