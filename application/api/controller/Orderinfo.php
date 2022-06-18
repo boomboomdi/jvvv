@@ -263,7 +263,6 @@ class Orderinfo extends Controller
             $orderModel = new OrderModel();
             $getPayUrlRes = $orderModel->getOrderUrl($orderInfo);
 
-            var_dump($getPayUrlRes);exit;
             if (!isset($getPayUrlRes['code']) || $getPayUrlRes['code'] != 0) {
                 return modelReMsg(-7, "", '订单链接获取失败，请重新下单！');
             }
