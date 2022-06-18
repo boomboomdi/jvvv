@@ -159,7 +159,7 @@ class OrderprepareModel extends Model
                                 "endTime" => date("Y-m-d H:i:s", time()),
                                 'param' => $param,
                                 "curlLocalRes" => $curlRes
-                            ]), 'curlGetJDOrderUrlFail');
+                            ]), 'doCurlGetJDOrderUrlFail');
                             return modelReMsg(-2, "", $curlRes['msg']);
                         } else {
                             $successNum++;
