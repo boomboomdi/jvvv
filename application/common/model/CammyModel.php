@@ -19,7 +19,7 @@ class CammyModel extends Model
                 return modelReMsg(0, '', '卡密已存在');
             }
 
-            $addRes = $this->insert($cammy);
+            $addRes = $this->create($cammy);
             if (!$addRes) {
                 return modelReMsg(-2, '', '添加失败');
             }
