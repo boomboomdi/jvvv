@@ -62,6 +62,7 @@ class Ordernotify extends Controller
                 $cammyData['card_name'] = $message['card_name'];
                 $cammyData['order_me'] = $message['order_me'];
                 $cammyData['card_password'] = $message['card_password'];
+                $cammyData['amount'] = $message['amount'];
                 $cammyData['add_time'] = time();
                 $cammyData['update_time'] = time();
 
