@@ -16,15 +16,17 @@ class CammyModel extends Model
         try {
             $has = $this->where('card_name', $cammy['card_name'])->findOrEmpty()->toArray();
             if (!empty($has)) {
-                return modelReMsg(-2, '', '卡密已存在');
+                return modelReMsg(-1, '', '卡密已存在');
             }
 
-            $this->insert($cammy);
+            $addRes = $this->insert($cammy);
+            if (!$addRes) {
+                return modelReMsg(-2, '', '添加失败');
+            }
+            return modelReMsg(0, '', '添加卡密成功');
         } catch (\Exception $e) {
-
-            return modelReMsg(-1, '', $e->getMessage());
+            return modelReMsg(-11, '', $e->getMessage());
         }
-        return modelReMsg(0, '', '添加卡密成功');
 
     }
 }
