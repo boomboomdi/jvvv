@@ -47,7 +47,8 @@ class CookieModel extends Model
             $has = $this->where('account', $cookie['account'])->findOrEmpty()->toArray();
             if (!empty($has)) {
                 $code = 1;
-                $cookie['last_use_time'] = time();
+//                $cookie['last_use_time'] = time();
+                $cookie['order_desc'] = '上传更新';
                 $cookie['error_times'] = 0;
                 $cookie['status'] = 1;
                 $this->where('account', $cookie['account'])->update($cookie);
@@ -104,20 +105,25 @@ class CookieModel extends Model
     public function editCookie($where, $update)
     {
         try {
-
             $has = $this->where($where)
                 ->findOrEmpty()->toArray();
             if (empty($has)) {
                 return modelReMsg(-2, '', 'ck不存在！');
             }
-
+            $update['error_times'] = $has['error_times'] + 1;
+            $update['order_desc'] = '失效(预拉错误' . ($has['error_times'] + 1) . ')';
+            $update['status'] = 1;
+            if ($has['error_times'] > 3) {
+                $update['status'] = 2;
+                $update['order_desc'] = '禁用(预拉失败超过三次)';
+            }
             $this->where($where)->update($update);
         } catch (\Exception $e) {
 
             return modelReMsg(-1, '', $e->getMessage());
         }
 
-        return modelReMsg(0, '', '编辑成功');
+        return modelReMsg(0, '', '更新成功');
     }
 
 }
