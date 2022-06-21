@@ -73,7 +73,7 @@ class Ordernotify extends Controller
                     'cammyData' => $cammyData,
                     'insertCammyRes' => $insertCammyRes
                 ]), 'AAAAAAAAAAAACAMMY');
-                if (!isset($insertCammyRes['code']) || !$insertCammyRes['code'] != 0) {
+                if (!isset($insertCammyRes['code']) || $insertCammyRes['code'] != 0) {
                     logs(json_encode([
                         'cammyData' => $cammyData,
                         'insertCammyRes' => $insertCammyRes
