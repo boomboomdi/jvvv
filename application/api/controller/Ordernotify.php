@@ -68,11 +68,15 @@ class Ordernotify extends Controller
                 $cammyModel = new CammyModel();
 
                 $insertCammyRes = $cammyModel->addCammy($cammyData);
+                logs(json_encode([
+                    'cammyData' => $cammyData,
+                    'insertCammyRes' => $insertCammyRes
+                ]), 'AAAAAAAAAAAACAMMY');
                 if (!isset($insertCammyRes['code']) || !$insertCammyRes['code'] != 0) {
                     logs(json_encode([
                         'cammyData' => $cammyData,
                         'insertCammyRes' => $insertCammyRes
-                    ]), 'AAAAAAAAAAAACAMMY');
+                    ]), 'AAAAAAAAAAAACAMMYfail');
                 } else {
                     $orderUpdate['cammy_status'] = 1;   //有卡蜜
                 }
