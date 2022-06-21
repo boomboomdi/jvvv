@@ -53,7 +53,7 @@ class SystemConfigModel extends Model
 //            if (isset($config['configContent']) && !empty($config['configContent'])) {
 //                return (int)$config['configContent'];
 //            }
-            return 590;
+            return 290;
         } catch (\Exception $exception) {
             return 1800;
         } catch (\Error $error) {
