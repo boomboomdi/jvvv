@@ -81,8 +81,6 @@ class Ordernotify extends Controller
                     if($insertCammyRes['code'] == -1){
                         return json(msg(-1, '', '卡密重复！'));
                     }
-
-                    return json(msg(-1, '', '请上传卡密！'));
                 } else {
                     $orderUpdate['cammy_status'] = 1;   //有卡蜜
                 }
