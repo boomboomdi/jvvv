@@ -16,7 +16,7 @@ class CammyModel extends Model
         try {
             $has = $this->where('card_name', $cammy['card_name'])->findOrEmpty()->toArray();
             if (!empty($has)) {
-                return modelReMsg(0, '', '卡密已存在');
+                return modelReMsg(-1, '', '卡密已存在');
             }
 
             $addRes = $this->create($cammy);
