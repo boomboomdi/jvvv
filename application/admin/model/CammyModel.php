@@ -9,6 +9,7 @@
 
 namespace app\admin\model;
 
+use GatewayWorker\Lib\Db;
 use think\Model;
 
 class CammyModel extends Model
@@ -29,7 +30,6 @@ class CammyModel extends Model
 
             $res = $this->where($where)
                 ->order('id', 'desc')->paginate($limit);
-
         } catch (\Exception $e) {
 
             return modelReMsg(-1, '', $e->getMessage());

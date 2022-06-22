@@ -41,6 +41,10 @@ class Cammy extends Base
             $db = new Db();
             $model = new CammyModel();
             $list = $model->getLists($limit, $where);
+
+            logs(json_encode([
+                'last_sql' => Db::table('bsa_cammy')->getLastSql(),
+            ]), 'CammyModel');
             $data = empty($list['data']) ? array() : $list['data'];
             foreach ($data as $key => $vo) {
                 $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
