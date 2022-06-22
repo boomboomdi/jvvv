@@ -89,7 +89,7 @@ class Index extends Base
         $cammyNum = $db::table("bsa_cammy")
             ->count();
         $todayTime = strtotime(date('Y-m-d'));
-        $yesterdayTime = strtotime(date('Y-m-d')-1);
+        $yesterdayTime = ($todayTime - 86400);
         $cammyAmountToday = $db::table("bsa_cammy")
             ->where('add_time', '>', $todayTime)
             ->where('add_time', '<', ($todayTime + 86400))
@@ -137,12 +137,12 @@ class Index extends Base
             'payTOrderNum' => $payTOrderNum,
             'usedTOrderNum' => $usedTOrderNum,
             'successTOrderRate' => $successTOrderRate,
-            'cammyAmount'=>$cammyAmount,
-            'cammyNum'=>$cammyNum,
-            'cammyAmountToday'=>$cammyAmountToday,
-            'cammyNumToday'=>$cammyNumToday,
-            'cammyAmountYesterday'=>$cammyAmountYesterday,
-            'cammyNumYesterday'=>$cammyNumYesterday,
+            'cammyAmount' => $cammyAmount,
+            'cammyNum' => $cammyNum,
+            'cammyAmountToday' => $cammyAmountToday,
+            'cammyNumToday' => $cammyNumToday,
+            'cammyAmountYesterday' => $cammyAmountYesterday,
+            'cammyNumYesterday' => $cammyNumYesterday,
         ]);
 
         return $this->fetch();
