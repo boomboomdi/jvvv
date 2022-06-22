@@ -9,6 +9,7 @@
 
 namespace app\admin\model;
 
+use think\Db;
 use think\facade\Log;
 use think\Model;
 
@@ -74,23 +75,29 @@ class CookieModel extends Model
     public function getUseCookie($account = "")
     {
         $where = [];
+        Db::startTrans();
         try {
             $where["status"] = 1;
             if (!empty($account)) {
                 $where['account'] = $account;
             }
-            $info = $this->where($where)->order("last_use_time asc")->find();
+            $info = $this->where($where)->order("last_use_time asc")->lock(true)->find();
             if (!empty($info)) {
                 $update['last_use_time'] = time();
                 $update['use_times'] = $info['use_times'] + 1;
                 $this->save($update, ['id' => $info['id']]);
+                Db::commit();
                 return modelReMsg(0, $info, 'ok');
             }
+
+            Db::rollback();
             return modelReMsg(-2, "", '无可用下单COOKIE');
         } catch (\Exception $exception) {
+            Db::rollback();
             logs(json_encode(['file' => $exception->getFile(), 'line' => $exception->getLine(), 'errorMessage' => $exception->getMessage()]), 'getUseCookie_exception');
             return modelReMsg(-11, '', $exception->getMessage());
         } catch (\Error $error) {
+            Db::rollback();
             logs(json_encode(['file' => $error->getFile(), 'line' => $error->getLine(), 'errorMessage' => $error->getMessage()]), 'getUseCookie_error');
             return modelReMsg(-22, "getUseCookie异常" . $error->getMessage());
         }
