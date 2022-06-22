@@ -25,10 +25,18 @@ class Cammy extends Base
 
             $limit = input('param.limit');
             $adminName = input('param.admin_name');
-
+            $startTime = input('param.startTime');
+            $endTime = input('param.endTime');
             $where = [];
             if (!empty($adminName)) {
                 $where[] = ['admin_name', 'like', $adminName . '%'];
+            }
+
+            if (!empty($startTime)) {
+                $where[] = ['add_time', '>', strtotime($startTime)];
+            }
+            if (!empty($endTime)) {
+                $where[] = ['add_time', '<', strtotime($endTime)];
             }
             $db = new Db();
             $model = new CammyModel();

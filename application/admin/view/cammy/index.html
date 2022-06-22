@@ -29,6 +29,20 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label">开始时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="startTime" placeholder="时间(上传)" autocomplete="off"
+                               class="layui-input" id="startTime">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间截至</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="endTime" placeholder="时间截至" autocomplete="off"
+                               class="layui-input" id="endTime">
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="LAY-user-back-search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
@@ -116,7 +130,7 @@
             // },
                 {
                 field: "add_time",
-                title: "添加事件",
+                title: "时间",
             }, {
                 title: "操作",
                 align: "center",
@@ -164,6 +178,8 @@
                 });
         });
     }
+    layTool.layDate('#startTime');
+    layTool.layDate('#endTime');
 </script>
 </body>
 </html>
