@@ -153,7 +153,7 @@ class Ordernotify extends Controller
                     'PrepareOrderWhere' => $updatePrepareOrderWhere,
                     'updatePrepare' => $updatePrepareOrder,
                     'updatePrepareOrderRes' => $updatePrepareOrderRes
-                ]), 'notifyUpdatePrepareFail');
+                ]), 'notifyUpdatePrepareLog');
             }
 
             return json(msg(0, '', '接收成功,更新成功！'));
