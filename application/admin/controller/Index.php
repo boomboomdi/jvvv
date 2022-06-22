@@ -83,6 +83,30 @@ class Index extends Base
             ->where('order_status', '=', 1)
             ->where('pay_status', '=', 1)
             ->count();
+        /**--------------卡密统计--------------*/
+        $cammyAmount = $db::table("bsa_cammy")
+            ->sum('amount');
+        $cammyNum = $db::table("bsa_cammy")
+            ->count();
+        $todayTime = strtotime(date('Y-m-d'));
+        $yesterdayTime = strtotime(date('Y-m-d')-1);
+        $cammyAmountToday = $db::table("bsa_cammy")
+            ->where('add_time', '>', $todayTime)
+            ->where('add_time', '<', ($todayTime + 86400))
+            ->sum('amount');
+        $cammyNumToday = $db::table("bsa_cammy")
+            ->where('add_time', '>', $todayTime)
+            ->where('add_time', '<', ($todayTime + 86400))
+            ->count();
+        $cammyAmountYesterday = $db::table("bsa_cammy")
+            ->where('add_time', '>', $yesterdayTime)
+            ->where('add_time', '<', ($yesterdayTime + 86400))
+            ->sum('amount');
+        $cammyNumYesterday = $db::table("bsa_cammy")
+            ->where('add_time', '>', $yesterdayTime)
+            ->where('add_time', '<', ($yesterdayTime + 86400))
+            ->count();
+        /**--------------卡密统计--------------*/
         $successTOrderRate = makeSuccessRate((int)$payTOrderNum, (int)$tOrderNum);
         if (session("admin_role_id") != 1) {
             $orderNum = 10000;
@@ -113,6 +137,12 @@ class Index extends Base
             'payTOrderNum' => $payTOrderNum,
             'usedTOrderNum' => $usedTOrderNum,
             'successTOrderRate' => $successTOrderRate,
+            'cammyAmount'=>$cammyAmount,
+            'cammyNum'=>$cammyNum,
+            'cammyAmountToday'=>$cammyAmountToday,
+            'cammyNumToday'=>$cammyNumToday,
+            'cammyAmountYesterday'=>$cammyAmountYesterday,
+            'cammyNumYesterday'=>$cammyNumYesterday,
         ]);
 
         return $this->fetch();
