@@ -83,9 +83,13 @@
             </script>
             <script type="text/html" id="cammyStatusTpl">
                 {{#  if(d.cammy_status == 1){ }}
-                <span class="layui-badge-dot green"></span>收到
+                <button class="layui-btn layui-btn-success layui-btn-xs">收到</button>
                 {{#  } else if(d.cammy_status == 2){ }}
-                <span class="layui-badge-dot gray"></span>未收
+                {{#  if(d.pay_status == 1){ }}
+                <button class="layui-btn layui-btn-danger layui-btn-xs">未收</button>
+                {{#  } else if(d.pay_status == 2) { }}
+                <button class="layui-btn layui-btn-primary layui-btn-xs">等待匹配</button>
+                {{#  } }}
                 {{#  } }}
             </script>
             <script type="text/html" id="table-seller-admin">
@@ -147,14 +151,14 @@
                 field: "merchant_sign",
                 title: "商户"
             },
-            //     {
-            //     field: "write_off_sign",
-            //     title: "核商"
-            // },
+                //     {
+                //     field: "write_off_sign",
+                //     title: "核商"
+                // },
                 {
-                field: "order_no",
-                title: "商户单号"
-            }, {
+                    field: "order_no",
+                    title: "商户单号"
+                }, {
                 field: "order_me",
                 title: "平台单号",
             }, {
@@ -172,31 +176,31 @@
                 width: 170,
             },
                 {
-                field: "user_ip",
-                title: "userIp",
-            },
+                    field: "user_ip",
+                    title: "userIp",
+                },
                 {
-                field: "pay_type",
-                title: "拉起来源"
-            },{
+                    field: "pay_type",
+                    title: "拉起来源"
+                }, {
                 field: "pay_time",
                 title: "支付时间"
             }, {
                 field: "order_status",
                 title: "订单状态",
                 align: "center",
-            },{
+            }, {
                 field: "pay_status",
                 title: "支付状态",
                 align: "center",
                 templet: '#payStatusTpl'
             },
                 {
-                field: "notify_status",
-                title: "回调状态",
-                align: "center",
-                templet: '#notifyStatusTpl'
-            },
+                    field: "notify_status",
+                    title: "回调状态",
+                    align: "center",
+                    templet: '#notifyStatusTpl'
+                },
                 {
                     field: "notify_time",
                     title: "回调时间"
