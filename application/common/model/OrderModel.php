@@ -128,10 +128,10 @@ class OrderModel extends Model
             return modelReMsg(1000, '', $notifyRes['msg']);
         } catch (\Exception $exception) {
             logs(json_encode(['orderData' => $orderData, 'file' => $exception->getFile(), 'line' => $exception->getLine(), 'errorMessage' => $exception->getMessage()]), 'orderNotify_exception');
-            return modelReMsg(-2, '', $exception->getMessage());
+            return modelReMsg(-11, '', $exception->getMessage());
         } catch (\Error $error) {
             logs(json_encode(['orderData' => $orderData, 'file' => $error->getFile(), 'line' => $error->getLine(), 'errorMessage' => $error->getMessage()]), 'orderNotify_error');
-            return modelReMsg(-3, '', $error->getMessage());
+            return modelReMsg(-22, '', $error->getMessage());
         }
     }
 
@@ -214,11 +214,11 @@ class OrderModel extends Model
         } catch (\Exception $exception) {
             $db::rollback();
             logs(json_encode(['data' => $data, 'file' => $exception->getFile(), 'line' => $exception->getLine(), 'errorMessage' => $exception->getMessage()]), 'orderNotifyToMerchant_exception');
-            return modelReMsg(-2, '', $exception->getMessage());
+            return modelReMsg(-11, '', $exception->getMessage());
         } catch (\Error $error) {
             $db::rollback();
             logs(json_encode(['data' => $data, 'file' => $error->getFile(), 'line' => $error->getLine(), 'errorMessage' => $error->getMessage()]), 'orderNotifyToMerchant_error');
-            return modelReMsg(-3, '', $error->getMessage());
+            return modelReMsg(-22, '', $error->getMessage());
         }
 
     }
