@@ -81,11 +81,20 @@ class CookieModel extends Model
             if (!empty($account)) {
                 $where['account'] = $account;
             }
-            $info = $this->where($where)->order("last_use_time asc")->lock(true)->find();
+            $info = $this->where($where)->order("use_times,last_use_time asc")->lock(true)->find();
             if (!empty($info)) {
                 $update['last_use_time'] = time();
                 $update['use_times'] = $info['use_times'] + 1;
-                $this->save($update, ['id' => $info['id']]);
+                $updateRes = Db::table('bsa_cookie')
+                    ->where('id','=',$info['id'])
+                    ->update($update);
+                if (!$updateRes){
+                    logs(json_encode([
+                        "time" => date("Y-m-d H:i:s", time()),
+                        'getUseCookie' => $info,
+                        "updateRes" => $updateRes
+                    ]), 'getUseCookieUpdateFail');
+                }
                 Db::commit();
                 return modelReMsg(0, $info, 'ok');
             }
