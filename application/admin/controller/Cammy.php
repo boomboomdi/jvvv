@@ -153,12 +153,12 @@ class Cammy extends Base
             }
             if (!isset($param['endTime']) || empty($param['endTime'])) {
                 $where[] = ['add_time', '<', $startTime + 86400];
-                $msg .= $msg . '到' . date('Y-m-d', $startTime + 86400);
+                $msg = $msg . '到' . date('Y-m-d', $startTime + 86400);
             } else {
                 //存在截止时间
                 $endTime = strtotime($param['endTime']);
                 $where[] = ['add_time', '<', $endTime];
-                $msg .= $msg . '到' . $param['endTime'];
+                $msg = $msg . '到' . $param['endTime'];
             }
 
             if(isset($param['order_me'])&&!empty($param['endTime'])){

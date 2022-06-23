@@ -50,7 +50,7 @@ class CammyModel extends Model
         try {
 
             $res = $this->where($where)
-                ->order('id', 'desc')->select();
+                ->order('id', 'asc')->paginate();
         } catch (\Exception $e) {
 
             return modelReMsg(-1, '', $e->getMessage());
