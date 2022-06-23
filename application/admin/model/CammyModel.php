@@ -50,7 +50,7 @@ class CammyModel extends Model
         try {
 
             $res = $this->where($where)->field( 'card_name,card_password,amount,add_time,order_me')
-                ->order('id', 'asc')->paginate();
+                ->order('id', 'asc')->select();
         } catch (\Exception $e) {
 
             return modelReMsg(-1, '', $e->getMessage());

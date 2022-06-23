@@ -174,11 +174,11 @@ class Cammy extends Base
                 $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
             }
             $list['data'] = $data;
-            logs(json_encode([
-                'param' => $param,
-                'SQL' => Db::table('bsa_cammy')->getLastSql(),
-                "data" => $list['data']
-            ]), 'CammyModel');
+//            logs(json_encode([
+//                'param' => $param,
+//                'SQL' => Db::table('bsa_cammy')->getLastSql(),
+//                "data" => $list['data']
+//            ]), 'CammyModel');
             if (0 == $list['code']) {
 
                 return json(['code' => 0, 'msg' => $msg.'.xlsx', 'data' => $list['data']->all()]);
