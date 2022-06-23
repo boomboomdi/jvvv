@@ -135,13 +135,13 @@
         form.on('submit(export)', function (data) {
             var field = data.field;
 
+            console.log(field);
             loading = layer.load(1, {shade: [0.3, '#fff']});
 
             // var $ = layui.jquery;
             //
             // var excel = layui.excel;
 
-                console.log(field);
                 // var time= document.getElementById("times").value;
                 // window.location.href="{:url('cammy/export')}?startTime="+channel+"&&time="+time;
         });
