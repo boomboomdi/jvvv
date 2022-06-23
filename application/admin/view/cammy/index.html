@@ -47,6 +47,11 @@
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
                 </div>
+                <div class="layui-inline">
+                    <button type="button" lay-submit class="layui-btn layui-btn-warm" lay-filter="export">
+                        <i class="layui-icon layui-icon-export layuiadmin-button-btn"></i>导出Excel
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -68,6 +73,7 @@
 </div>
 
 <script src="/static/layui/layui.js"></script>
+<script src="/static/layui/layui.all.js"></script>
 <script src="/static/common/js/layTool.js"></script>
 <script src="/static/common/js/jquery.min.js"></script>
 
@@ -85,6 +91,25 @@
                 layTool.open("{:url('prepare/addPrepare')}", "添加预拉单", '50%', '50%');
             }
         };
+        $(".export").click(function () {
+            var ins1 = table.render({
+                elem: '#data_export',
+                url: "url", //数据接口
+                method: 'post',
+                where: {
+                    mycode: "all"
+                },
+                limit: 10,
+                cols: [[
+                    {field: 'id', title: 'ID'},
+                    {field: 'name', title: '名字'},
+                ]],
+                done: function (res, curr, count) {
+                    exportData = res.data;
+                    table.exportFile(ins1.config.id, exportData, 'xls');
+                }
+            });
+        })
 
         $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
             var type = $(this).data('type');
@@ -99,6 +124,26 @@
             table.reload('LAY-user-table', {
                 where: field
             });
+        });
+
+        $('.layui-btn layui-btn-warm').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //监听导出
+        form.on('submit(export)', function (data) {
+            var field = data.field;
+
+            loading = layer.load(1, {shade: [0.3, '#fff']});
+
+            // var $ = layui.jquery;
+            //
+            // var excel = layui.excel;
+
+                console.log(field);
+                // var time= document.getElementById("times").value;
+                // window.location.href="{:url('cammy/export')}?startTime="+channel+"&&time="+time;
         });
     });
 
@@ -123,15 +168,15 @@
                 field: "card_password",
                 title: "密码",
             },
-            //     {
-            //     field: "status",
-            //     title: "状态",
-            //     templet: '#statusTpl'
-            // },
+                //     {
+                //     field: "status",
+                //     title: "状态",
+                //     templet: '#statusTpl'
+                // },
                 {
-                field: "add_time",
-                title: "时间",
-            }, {
+                    field: "add_time",
+                    title: "时间",
+                }, {
                 title: "操作",
                 align: "center",
                 width: 150,
@@ -178,6 +223,7 @@
                 });
         });
     }
+
     layTool.layDate('#startTime');
     layTool.layDate('#endTime');
 </script>
