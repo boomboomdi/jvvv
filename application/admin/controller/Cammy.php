@@ -169,12 +169,18 @@ class Cammy extends Base
             }
             $model = new CammyModel();
             $list = $model->getListsByWhere($where);
+            $data = empty($list['data']) ? array() : $list['data'];
+            foreach ($data as $key => $vo) {
+                $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
+            }
+            $list['data'] = $data;
             logs(json_encode([
                 'param' => $param,
                 'SQL' => Db::table('bsa_cammy')->getLastSql(),
                 "data" => $list['data']
             ]), 'CammyModel');
             if (0 == $list['code']) {
+
                 return json(['code' => 0, 'msg' => $msg.'.xlsx', 'data' => $list['data']->all()]);
             }
 
