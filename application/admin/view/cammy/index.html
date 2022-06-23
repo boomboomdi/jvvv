@@ -134,6 +134,9 @@
         //监听导出
         form.on('submit(export)', function (data) {
             var field = data.field;
+            loading = layer.load(1, {shade: [0.3, '#fff']});
+            var $ = layui.jquery;
+            var excel = layui.excel;
             console.log(field);
 
             $.ajax({
