@@ -73,10 +73,11 @@
 </div>
 
 <script src="/static/layui/layui.js"></script>
-<script src="/static/layui/layui.all.js"></script>
 <script src="/static/common/js/layTool.js"></script>
 <script src="/static/common/js/jquery.min.js"></script>
+<script src="/static/common/js/jquery.min.js"></script>
 
+<script src="/static/layui/layui_exts/excel.js"></script>
 <script>
     layui.config({
         base: '/static/admin/'
@@ -91,25 +92,6 @@
                 layTool.open("{:url('prepare/addPrepare')}", "添加预拉单", '50%', '50%');
             }
         };
-        $(".export").click(function () {
-            var ins1 = table.render({
-                elem: '#data_export',
-                url: "url", //数据接口
-                method: 'post',
-                where: {
-                    mycode: "all"
-                },
-                limit: 10,
-                cols: [[
-                    {field: 'id', title: 'ID'},
-                    {field: 'name', title: '名字'},
-                ]],
-                done: function (res, curr, count) {
-                    exportData = res.data;
-                    table.exportFile(ins1.config.id, exportData, 'xls');
-                }
-            });
-        })
 
         $('.layui-btn.layuiadmin-btn-admin').on('click', function () {
             var type = $(this).data('type');
