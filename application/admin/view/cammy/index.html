@@ -132,9 +132,17 @@
                     if(0 == res.code){
 
                         console.log(res.data);
+                        data = excel.filterExportData(data, [
+                            // 'id',
+                            'card_name',
+                            'card_password',
+                            'amount',
+                            'add_time',
+                            'order_me'
+                        ]);
                         // 假如返回的 res.data 是需要导出的列表数据
                         // 1. 数组头部新增表头
-                        res.data.unshift({id: 'ID',amount: '金额',add_time:'时间',order_me:'平台单号',card_name:'帐号',card_password:'卡密'});
+                        res.data.unshift({card_name:'帐号',card_password:'卡密',amount: '金额',add_time:'时间',order_me:'平台单号'});
                         // 3. 执行导出函数，系统会弹出弹框
                         excel.exportExcel({
                             sheet1: res.data
