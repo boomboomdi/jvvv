@@ -136,4 +136,46 @@ class Cammy extends Base
             return json($res);
         }
     }
+
+    public function export()
+    {
+        if (request()->isAjax()) {
+            $param = input('param.');
+            $msg = '导出失败！';
+            $startTime = strtotime(date('Y-m-d'));
+            if (!isset($param['startTime']) || empty($param['startTime'])) {
+                $where[] = ['add_time', '>', $startTime];
+                $msg = '卡密' . date('Y-m-d');
+            } else {
+                $startTime = strtotime($param['startTime']);
+                $where[] = ['add_time', '>', $startTime];
+                $msg = '卡密' . $param['startTime'];
+            }
+            if (!isset($param['endTime']) || empty($param['endTime'])) {
+                $where[] = ['add_time', '<', $startTime + 86400];
+                $msg .= $msg . '到' . date('Y-m-d', $startTime + 86400);
+            } else {
+                //存在截止时间
+                $endTime = strtotime($param['endTime']);
+                $where[] = ['add_time', '<', $endTime];
+                $msg .= $msg . '到' . $param['endTime'];
+            }
+
+            if(isset($param['order_me'])&&!empty($param['endTime'])){
+                $where[] = ['order_me', '=', $param['endTime']];
+            }
+            if(isset($param['card_name'])&&!empty($param['card_name'])){
+                $where[] = ['card_name', '=', $param['card_name']];
+            }
+            $model = new CammyModel();
+            $list = $model->getListsByWhere($where);
+            if (0 == $list['code']) {
+                return json(['code' => 0, 'msg' => $msg, 'data' => $list['data']->all()]);
+            }
+
+            return json(['code' => -2, 'msg' => '导出失败', 'data' => []]);
+        }else{
+            return json(['code' => -11, 'msg' => '请求失败', 'data' => []]);
+        }
+    }
 }

@@ -134,13 +134,36 @@
         //监听导出
         form.on('submit(export)', function (data) {
             var field = data.field;
-
             console.log(field);
-            loading = layer.load(1, {shade: [0.3, '#fff']});
 
-            // var $ = layui.jquery;
-            //
-            // var excel = layui.excel;
+            $.ajax({
+                url: '/admin/cammy/export',
+                dataType: 'json',
+                data: {
+                    data:JSON.stringify(data.field)
+                },
+                success: function(res) {
+                    layer.close(loading);
+                    layer.msg(res.msg);
+                    if(0 == res.code){
+                        // 假如返回的 res.data 是需要导出的列表数据
+                        // 1. 数组头部新增表头
+                        res.data.unshift({id: 'ID',amount: '金额',add_time:'时间',order_me:'平台单号',card_name:'帐号',card_password:'卡密'});
+                        // 3. 执行导出函数，系统会弹出弹框
+                        excel.exportExcel({
+                            sheet1: res.data
+                        }, res.msg, 'xlsx');
+                    }else{
+                        layer.alert(res.msg);
+                    }
+
+
+                },
+                error:function(res){
+                    layer.close(loading);
+                    layer.msg(res.msg);
+                }
+            });
 
                 // var time= document.getElementById("times").value;
                 // window.location.href="{:url('cammy/export')}?startTime="+channel+"&&time="+time;

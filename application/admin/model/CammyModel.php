@@ -38,5 +38,24 @@ class CammyModel extends Model
         return modelReMsg(0, $res, 'ok');
     }
 
+    /**
+     * 卡密查询
+     * @param $where
+     * @return array
+     */
+    public function getListsByWhere($where)
+    {
+        $prefix = config('database.prefix');
 
+        try {
+
+            $res = $this->where($where)
+                ->order('id', 'desc')->select();
+        } catch (\Exception $e) {
+
+            return modelReMsg(-1, '', $e->getMessage());
+        }
+
+        return modelReMsg(0, $res, 'ok');
+    }
 }
