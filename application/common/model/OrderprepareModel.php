@@ -121,14 +121,14 @@ class OrderprepareModel extends Model
                 return modelReMsg(-1, $successNum, "无可用ck");
             }
             for ($len = $prepareNum; $len > 0; --$len) {
+
                 //获取ck
-                $cookie = $cookieModel->getUseCookie();
-                if (!isset($cookie['code']) || $cookie['code'] != 0) {
+                $getCookie = $cookieModel->getUseCookie();
+                if (!isset($getCookie['code']) || $getCookie['code'] != 0) {
                     $len = 0;
                     break;
                 } else {
                     $addParam['order_me'] = md5(uniqid() . getMillisecond());
-                    $addParam['ck_account'] = $cookie['data']['account'];
                     $addParam['status'] = 2;  //默认停用
                     $addParam['order_serial'] = $this->getOrderSerial();
                     $addParam['order_amount'] = $amount;
@@ -136,34 +136,55 @@ class OrderprepareModel extends Model
                     $addParam['add_time'] = time();
                     $insertRes = Db::table("bsa_order_prepare")->insert($addParam);
                     if (!$insertRes) {
+
                         $errorNum++;
                         logs(json_encode([
                             'param' => $addParam,
                             "insertRes" => $insertRes
                         ]), 'curlGetJDOrderUrlInsertOrderFail');
                     } else {
-                        $param['cookie'] = $cookie['data']['cookie'];
-                        $param['order_me'] = $addParam['order_me'];
-                        $param['amount'] = $addParam['order_amount'];
-                        $checkStartTime = date('Y-m-d H:i:s', time());
-                        $curlRes = $this->getJDOrderUrl($param);
-                        if (!isset($curlRes['code']) || $curlRes['code'] != 0) {
-                            $errorNum++;
-                            $where['order_me'] = $addParam['order_me'];
-                            $update['order_desc'] = "预拉单失败|" . $curlRes['data'];
+                        Db::startTrans();
+                        $where['order_me'] = $addParam['order_me'];
+                        $cookie = $cookieModel->getUseCookie();
+                        if (!isset($cookie['code']) || $cookie['code'] != 0) {
+                            Db::commit();
+                            $update['order_desc'] = "预拉单失败|" . '无可用CK';
                             Db::table("bsa_order_prepare")
                                 ->where($where)
                                 ->update($update);
-                            logs(json_encode([
-                                "startTime" => $checkStartTime,
-                                "endTime" => date("Y-m-d H:i:s", time()),
-                                'param' => $param,
-                                "curlLocalRes" => $curlRes
-                            ]), 'doCurlGetJDOrderUrlFail');
-                            return modelReMsg(-2, "", $curlRes['msg']);
-                        } else {
-                            $successNum++;
+                            $len = 0;
+                            break;
+                        }else{
+                            Db::commit();
+                            $param['cookie'] = $cookie['data']['cookie'];
+                            $param['order_me'] = $addParam['order_me'];
+                            $param['amount'] = $addParam['order_amount'];
+                            $checkStartTime = date('Y-m-d H:i:s', time());
+                            $curlRes = $this->getJDOrderUrl($param);
+                            if (!isset($curlRes['code']) || $curlRes['code'] != 0) {
+                                $errorNum++;
+                                $update['order_desc'] = "预拉单失败|" . $curlRes['data'];
+                                Db::table("bsa_order_prepare")
+                                    ->where($where)
+                                    ->update($update);
+                                logs(json_encode([
+                                    "startTime" => $checkStartTime,
+                                    "endTime" => date("Y-m-d H:i:s", time()),
+                                    'param' => $param,
+                                    "curlLocalRes" => $curlRes
+                                ]), 'doCurlGetJDOrderUrlFail');
+                                return modelReMsg(-2, "", $curlRes['msg']);
+                            } else {
+                                $update['ck_account'] = $cookie['data']['account'];
+                                $update['cookie'] = $cookie['data']['cookie'];
+                                $update['order_desc'] = "预拉中|" . $curlRes['data'];
+                                Db::table("bsa_order_prepare")
+                                    ->where($where)
+                                    ->update($update);
+                                $successNum++;
+                            }
                         }
+
                     }
                 }
 
