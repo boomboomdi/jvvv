@@ -146,7 +146,7 @@
                         // 3. 执行导出函数，系统会弹出弹框
                         excel.exportExcel({
                             sheet1: res.data
-                        }, res.msg, 'xlsx');
+                        }, '卡密', 'xlsx');
                     }else{
                         layer.alert(res.msg);
                     }

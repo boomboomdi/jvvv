@@ -175,7 +175,7 @@ class Cammy extends Base
                 "data" => $list['data']
             ]), 'CammyModel');
             if (0 == $list['code']) {
-                return json(['code' => 0, 'msg' => $msg, 'data' => $list['data']->all()]);
+                return json(['code' => 0, 'msg' => $msg.'.xlsx', 'data' => $list['data']->all()]);
             }
 
             return json(['code' => -2, 'msg' => '导出失败', 'data' => []]);
