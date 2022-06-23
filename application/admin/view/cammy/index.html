@@ -130,6 +130,8 @@
                     layer.close(loading);
                     layer.msg(res.msg);
                     if(0 == res.code){
+
+                        console.log(res.data);
                         // 假如返回的 res.data 是需要导出的列表数据
                         // 1. 数组头部新增表头
                         res.data.unshift({id: 'ID',amount: '金额',add_time:'时间',order_me:'平台单号',card_name:'帐号',card_password:'卡密'});
