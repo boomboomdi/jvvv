@@ -169,6 +169,11 @@ class Cammy extends Base
             }
             $model = new CammyModel();
             $list = $model->getListsByWhere($where);
+            logs(json_encode([
+                'param' => $param,
+                'SQL' => Db::table('bsa_cammy')->getLastSql(),
+                "data" => $list['data']
+            ]), 'CammyModel');
             if (0 == $list['code']) {
                 return json(['code' => 0, 'msg' => $msg, 'data' => $list['data']->all()]);
             }
