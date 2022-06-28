@@ -18,7 +18,7 @@ use tool\Log;
 
 class Cammy extends Base
 {
-    //预拉任务
+    //卡密
     public function index()
     {
         if (request()->isAjax()) {
@@ -28,6 +28,9 @@ class Cammy extends Base
             $startTime = input('param.startTime');
             $endTime = input('param.endTime');
             $where = [];
+            if (!empty(input('param.order_me'))) {
+                $where[] = ['order_me', '=', input('param.order_me')];
+            }
             if (!empty($adminName)) {
                 $where[] = ['admin_name', 'like', $adminName . '%'];
             }
