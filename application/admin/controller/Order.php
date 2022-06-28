@@ -149,7 +149,7 @@ class Order extends Base
                     $updatePrepareOrder['pay_amount'] = $orderData['amount'];
                     $updatePrepareOrderRes = Db::table("bsa_order_prepare")
                         ->where($updatePrepareOrderWhere)->update($updatePrepareOrder);
-                    if(!$updatePrepareOrderRes){
+                    if (!$updatePrepareOrderRes) {
                         return json(modelReMsg(-6, '', '更新预拉单失败!-6'));
                     }
                 }
@@ -227,6 +227,11 @@ class Order extends Base
                 $updateCheckData['check_status'] = 3;
                 Db::table("bsa_order")->where($updateCheckWhere)
                     ->update($updateCheckData);
+
+                if (!isset($checkOrderStatusRes['code']) || $checkOrderStatusRes['code'] != 0) {
+                    return json(modelReMsg(-8, '', '查询失败!'));
+                }
+                return json(modelReMsg(0, '', '查询成功，请稍后刷新查看!'));
 
 
             } else {
