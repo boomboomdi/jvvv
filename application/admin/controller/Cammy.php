@@ -170,6 +170,9 @@ class Cammy extends Base
             if(isset($param['card_name'])&&!empty($param['card_name'])){
                 $where[] = ['card_name', '=', $param['card_name']];
             }
+             if(isset($param['id'])&&!empty($param['id'])){
+                $where[] = ['id', '>', $param['id']];
+            }
             $model = new CammyModel();
             $list = $model->getListsByWhere($where);
             $data = empty($list['data']) ? array() : $list['data'];

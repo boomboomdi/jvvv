@@ -49,7 +49,7 @@ class CammyModel extends Model
 
         try {
 
-            $res = $this->where($where)->field( 'card_name,card_password,amount,add_time,order_me')
+            $res = $this->where($where)->field( 'id,card_name,card_password,amount,add_time,order_me')
                 ->order('id', 'asc')->select();
         } catch (\Exception $e) {
 

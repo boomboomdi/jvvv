@@ -43,6 +43,13 @@
                     </div>
                 </div>
                 <div class="layui-inline">
+                    <label class="layui-form-label">ID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="id" placeholder="上次导出id最大值，导出此id之后的卡密" autocomplete="off"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
                     <button class="layui-btn layuiadmin-btn-admin" lay-submit lay-filter="LAY-user-back-search">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
@@ -124,16 +131,16 @@
                 url: '/admin/cammy/export',
                 dataType: 'json',
                 data: {
-                    data:JSON.stringify(data.field)
+                    data: JSON.stringify(data.field)
                 },
-                success: function(res) {
+                success: function (res) {
                     layer.close(loading);
                     layer.msg(res.msg);
-                    if(0 == res.code){
+                    if (0 == res.code) {
 
                         console.log(res.data);
                         data = excel.filterExportData(data, [
-                            // 'id',
+                            'id',
                             'card_name',
                             'card_password',
                             'amount',
@@ -142,25 +149,32 @@
                         ]);
                         // 假如返回的 res.data 是需要导出的列表数据
                         // 1. 数组头部新增表头
-                        res.data.unshift({card_name:'帐号',card_password:'卡密',amount: '金额',add_time:'时间',order_me:'平台单号'});
+                        res.data.unshift({
+                            id: 'id',
+                            card_name: '帐号',
+                            card_password: '卡密',
+                            amount: '金额',
+                            add_time: '时间',
+                            order_me: '平台单号'
+                        });
                         // 3. 执行导出函数，系统会弹出弹框
                         excel.exportExcel({
                             sheet1: res.data
                         }, res.msg, 'xlsx');
-                    }else{
+                    } else {
                         layer.alert(res.msg);
                     }
 
 
                 },
-                error:function(res){
+                error: function (res) {
                     layer.close(loading);
                     layer.msg(res.msg);
                 }
             });
 
-                // var time= document.getElementById("times").value;
-                // window.location.href="{:url('cammy/export')}?startTime="+channel+"&&time="+time;
+            // var time= document.getElementById("times").value;
+            // window.location.href="{:url('cammy/export')}?startTime="+channel+"&&time="+time;
         });
     });
 
