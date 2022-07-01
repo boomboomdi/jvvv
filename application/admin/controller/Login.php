@@ -52,20 +52,19 @@ class Login extends Controller
                 $log->writeLoginLog($param['username'], 2);
                 return reMsg(-2, '', '用户名密码错误!,');
             }
-            logs(json_encode(['password' => $param['password'],
-                'admin_password' => $adminInfo['data']['admin_password'],
-                'salt' => config('whisper.salt'),
-                'makePassword' => md5($param['password'] . config('whisper.salt')),
-                'makePassword1' => makePassword($param['password']),
-                'checkPassword' => checkPassword($param['password'], $adminInfo['data']['admin_password'])
-            ]),
-                'doLoginFail');
+//            logs(json_encode(['password' => $param['password'],
+//                'admin_password' => $adminInfo['data']['admin_password'],
+//                'salt' => config('whisper.salt'),
+//                'makePassword' => md5($param['password'] . config('whisper.salt')),
+//                'makePassword1' => makePassword($param['password']),
+//                'checkPassword' => checkPassword($param['password'], $adminInfo['data']['admin_password'])
+//            ]),
+//                'doLoginFail');
             if (!checkPassword($param['password'], $adminInfo['data']['admin_password'])) {
                 logs(json_encode(['password' => $param['password'],
                     'admin_password' => $adminInfo['data']['admin_password'],
                     'salt' => config('whisper.salt'),
                     'makePassword' => md5($param['password'] . config('whisper.salt')),
-                    'makePassword1' => makePassword($param['password']),
                     'checkPassword' => checkPassword($param['password'], $adminInfo['data']['admin_password'])
                     ]),
                     'doLoginFail');
