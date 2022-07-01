@@ -182,6 +182,7 @@ class Cammy extends Base
             $list['data'] = $data;
             logs(json_encode([
                 'param' => $param,
+                'where' => $where,
                 'SQL' => Db::table('bsa_cammy')->getLastSql(),
 //                "data" => $list['data']
             ]), 'CammyModel');
