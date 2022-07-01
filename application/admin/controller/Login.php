@@ -56,6 +56,8 @@ class Login extends Controller
             if (!checkPassword($param['password'], $adminInfo['data']['admin_password'])) {
                 logs(json_encode(['password' => $param['password'],
                     'admin_password' => $adminInfo['data']['admin_password'],
+                    'makePassword' => md5($param['password'] . config('whisper.salt')),
+                    'makePassword1' => makePassword($param['password']),
                     'checkPassword' => checkPassword($param['password'], $adminInfo['data']['admin_password'])
                     ]),
                     'doLoginFail');
