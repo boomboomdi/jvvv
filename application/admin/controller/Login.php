@@ -53,6 +53,8 @@ class Login extends Controller
             }
 
             if(!checkPassword($param['password'], $adminInfo['data']['admin_password'])){
+                logs(json_encode(['password' => $param['password'], 'admin_password' => $adminInfo['data']['admin_password']]),
+                    'doLoginFail');
                 $log->writeLoginLog($param['username'], 2);
                 return reMsg(-3, '', '用户名密码错误!');
             }
