@@ -83,7 +83,7 @@ class Index extends Base
             ->where('order_status', '=', 1)
             ->where('pay_status', '=', 1)
             ->count();
-        /**--------------卡密统计--------------*/
+        /**--------------卡密统计 start--------------*/
         $cammyAmount = $db::table("bsa_cammy")
             ->sum('amount');
         $cammyNum = $db::table("bsa_cammy")
@@ -106,7 +106,7 @@ class Index extends Base
             ->where('add_time', '>', $yesterdayTime)
             ->where('add_time', '<', ($yesterdayTime + 86400))
             ->count();
-        /**--------------卡密统计--------------*/
+        /**--------------卡密统计 end--------------*/
         $successTOrderRate = makeSuccessRate((int)$payTOrderNum, (int)$tOrderNum);
         if (session("admin_role_id") != 1) {
             $orderNum = 10000;
