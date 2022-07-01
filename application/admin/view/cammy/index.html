@@ -130,7 +130,7 @@
             $.ajax({
                 url: '/admin/cammy/export',
                 dataType: 'json',
-                data: JSON.stringify(data.field),
+                data: field,
                 success: function (res) {
                     layer.close(loading);
                     layer.msg(res.msg);
