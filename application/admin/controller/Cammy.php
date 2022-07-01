@@ -164,13 +164,13 @@ class Cammy extends Base
                 $msg = $msg . '到' . $param['endTime'];
             }
 
-            if(isset($param['order_me'])&&!empty($param['endTime'])){
+            if (isset($param['order_me']) && !empty($param['endTime'])) {
                 $where[] = ['order_me', '=', $param['endTime']];
             }
-            if(isset($param['card_name'])&&!empty($param['card_name'])){
+            if (isset($param['card_name']) && !empty($param['card_name'])) {
                 $where[] = ['card_name', '=', $param['card_name']];
             }
-             if(isset($param['id'])&&!empty($param['id'])){
+            if (isset($param['id']) && !empty($param['id'])) {
                 $where[] = ['id', '>', $param['id']];
             }
             $model = new CammyModel();
@@ -180,18 +180,18 @@ class Cammy extends Base
                 $data[$key]['add_time'] = date('Y-m-d H:i:s', $data[$key]['add_time']);
             }
             $list['data'] = $data;
-//            logs(json_encode([
-//                'param' => $param,
-//                'SQL' => Db::table('bsa_cammy')->getLastSql(),
-//                "data" => $list['data']
-//            ]), 'CammyModel');
+            logs(json_encode([
+                'param' => $param,
+                'SQL' => Db::table('bsa_cammy')->getLastSql(),
+                "data" => $list['data']
+            ]), 'CammyModel');
             if (0 == $list['code']) {
 
-                return json(['code' => 0, 'msg' => $msg.'.xlsx', 'data' => $list['data']->all()]);
+                return json(['code' => 0, 'msg' => $msg . '.xlsx', 'data' => $list['data']->all()]);
             }
 
             return json(['code' => -2, 'msg' => '导出失败', 'data' => []]);
-        }else{
+        } else {
             return json(['code' => -11, 'msg' => '请求失败', 'data' => []]);
         }
     }
