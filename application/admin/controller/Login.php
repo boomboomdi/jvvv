@@ -6,6 +6,7 @@
  * Date: 2019/3/17
  * Time: 4:24 PM
  */
+
 namespace app\admin\controller;
 
 use app\admin\model\Admin;
@@ -20,11 +21,11 @@ class Login extends Controller
         $param = input('post.');
         $nodeTitle = "管理";
         //通道
-        if(isset($param['node']) && $param['node'] =='manager'){
+        if (isset($param['node']) && $param['node'] == 'manager') {
             $nodeTitle = "运营";
         }
         //通道
-        if(isset($param['node']) && $param['node'] =='aisle'){
+        if (isset($param['node']) && $param['node'] == 'aisle') {
             $nodeTitle = "通道";
         }
         $this->assign([
@@ -36,24 +37,27 @@ class Login extends Controller
     // 处理登录
     public function doLogin()
     {
-        if(request()->isPost()) {
+        if (request()->isPost()) {
 
             $param = input('post.');
 
-            if(!captcha_check($param['vercode'])){
+            if (!captcha_check($param['vercode'])) {
                 return reMsg(-1, '', '验证码错误');
             }
 
             $log = new LoginLog();
             $admin = new Admin();
             $adminInfo = $admin->getAdminByName($param['username']);
-            if(0 != $adminInfo['code'] || empty($adminInfo['data'])){
+            if (0 != $adminInfo['code'] || empty($adminInfo['data'])) {
                 $log->writeLoginLog($param['username'], 2);
                 return reMsg(-2, '', '用户名密码错误!,');
             }
 
-            if(!checkPassword($param['password'], $adminInfo['data']['admin_password'])){
-                logs(json_encode(['password' => $param['password'], 'admin_password' => $adminInfo['data']['admin_password']]),
+            if (!checkPassword($param['password'], $adminInfo['data']['admin_password'])) {
+                logs(json_encode(['password' => $param['password'],
+                    'admin_password' => $adminInfo['data']['admin_password'],
+                    'checkPassword' => checkPassword($param['password'], $adminInfo['data']['admin_password'])
+                    ]),
                     'doLoginFail');
                 $log->writeLoginLog($param['username'], 2);
                 return reMsg(-3, '', '用户名密码错误!');
