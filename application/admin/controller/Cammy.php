@@ -170,8 +170,8 @@ class Cammy extends Base
             if (isset($param['card_name']) && !empty($param['card_name'])) {
                 $where[] = ['card_name', '=', $param['card_name']];
             }
-            if (isset($param['id']) && !empty($param['id'])) {
-                $where[] = ['id', '>', $param['id']];
+            if (isset($param['limitId']) && !empty($param['limitId'])) {
+                $where[] = ['id', '>', $param['limitId']];
             }
             $model = new CammyModel();
             $list = $model->getListsByWhere($where);
@@ -183,7 +183,7 @@ class Cammy extends Base
             logs(json_encode([
                 'param' => $param,
                 'SQL' => Db::table('bsa_cammy')->getLastSql(),
-                "data" => $list['data']
+//                "data" => $list['data']
             ]), 'CammyModel');
             if (0 == $list['code']) {
 
