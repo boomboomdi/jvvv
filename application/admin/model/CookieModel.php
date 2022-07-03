@@ -129,9 +129,9 @@ class CookieModel extends Model
             $update['error_times'] = $has['error_times'] + 1;
             $update['order_desc'] = '失效(预拉错误' . ($has['error_times'] + 1) . ')';
             $update['status'] = 1;
-            if ($has['error_times'] > 2) {
+            if ($has['error_times'] > 0) {
                 $update['status'] = 2;
-                $update['order_desc'] = '禁用(预拉失败超过三次)';
+                $update['order_desc'] = '禁用(预拉失败|'.($has['error_times'] + 1).'|次)';
             }
             $this->where($where)->update($update);
         } catch (\Exception $e) {
