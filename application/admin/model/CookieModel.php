@@ -131,7 +131,7 @@ class CookieModel extends Model
             $update['status'] = 1;
             if ($has['error_times'] > 0) {
                 $update['status'] = 2;
-                $update['order_desc'] = '禁用(预拉失败|'.($has['error_times'] + 1).'|次)';
+                $update['order_desc'] = '禁用(预拉失败|' . ($has['error_times'] + 1) . '|次)';
             }
             $this->where($where)->update($update);
         } catch (\Exception $e) {
@@ -142,4 +142,33 @@ class CookieModel extends Model
         return modelReMsg(0, '', '更新成功');
     }
 
+    /**
+     * 修改所有cookie状态==>不可用
+     * @return array
+     */
+    public function stopCookieByWhere()
+    {
+        $updateNum = 0;
+        try {
+            $has = Db::table('bsa_cookie')
+                ->where('status', '=', 1)
+                ->column('id');
+            if (empty($has)) {
+                return modelReMsg(-1, $updateNum, '无开启Cookie');
+            }
+
+            $updateNum = count($has);
+            logs(json_encode(['stopId' => $has,
+                'updateNum' => $updateNum,
+                'admin_user_name' => session('admin_user_name'),
+            ]), 'stopCookieByWhereLog');
+            $update['status'] = 2;
+            $update['order_desc'] = '禁用(' . (session('admin_user_name')) . '|' . date("Y-m-d H:i:s", time()) . ')';
+            $this->where('id', 'in', $has)->update($update);
+        } catch (\Exception $e) {
+            return modelReMsg(-1, $updateNum, $e->getMessage());
+        }
+
+        return modelReMsg(0, $updateNum, '更新成功:禁用' . $updateNum . '条');
+    }
 }

@@ -101,4 +101,15 @@ class Cookie extends Base
 
         return $this->fetch('add');
     }
+
+    public function stopAllCookie()
+    {
+        if(request()->isAjax()) {
+            $cookieModel = new CookieModel();
+            $res = $cookieModel->stopCookieByWhere();
+            Log::write('禁用Cookie(' . (session('admin_user_name')) . '|'.date("Y-m-d H:i:s", time()).')');
+
+            return json($res);
+        }
+    }
 }

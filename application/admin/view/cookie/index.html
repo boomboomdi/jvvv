@@ -27,6 +27,11 @@
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                     </button>
                 </div>
+                <div class="layui-inline">
+                    <button type="button" lay-submit class="layui-btn layui-btn-danger" lay-filter="stopAllCookie">
+                        <i class="layui-icon  layuiadmin-button-btn"></i>禁用全部
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -89,6 +94,38 @@
             // 执行重载
             table.reload('LAY-user-table', {
                 where: field
+            });
+        });
+
+        $('.layui-btn layui-btn-danger').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //监听导出
+        form.on('submit(stopAllCookie)', function (data) {
+            var field = data.field;  layer.ready(function () {
+                var index = layer.confirm('确定禁用所有Cookie？', {
+                    title: '友情提示',
+                    icon: 3,
+                    btn: ['确定', '取消']
+                }, function () {
+
+                    $.getJSON('{:url("cookie/stopallcookie")}', function (res) {
+                        console.log(res);
+                        if (0 == res.code) {
+
+                            layer.msg(res.msg);
+                            setTimeout(function () {
+                                renderTable();
+                            }, 300);
+                        } else {
+                            layer.alert(res.msg);
+                        }
+                    });
+                }, function () {
+
+                });
             });
         });
     });

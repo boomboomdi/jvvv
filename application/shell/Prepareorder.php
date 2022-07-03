@@ -61,15 +61,15 @@ class Prepareorder extends Command
                         if (isset($doPrepareNum['data']) && $doPrepareNum['data'] > 0) {
                             $doNum -= $doPrepareNum['data'];
                         }
-                        logs(json_encode([
-                            'order_amount' => $v['order_amount'],
-                            'canUseNum' => $canUseNum['data'],
-                            'doPrepareNum' => $doPrepareNum['data'],
-                            'doNum' => $v['prepare_num'],
-                            'PrepareOrderKey' => $PrepareOrderKey,
-                            'lastSql' => Db::table("bsa_order_prepare")->getLastSql(),
-                            'setRes' => $setRes,
-                        ]), 'curlAmountGetJDOrderUrl');
+//                        logs(json_encode([
+//                            'order_amount' => $v['order_amount'],
+//                            'canUseNum' => $canUseNum['data'],
+//                            'doPrepareNum' => $doPrepareNum['data'],
+//                            'doNum' => $v['prepare_num'],
+//                            'PrepareOrderKey' => $PrepareOrderKey,
+//                            'lastSql' => Db::table("bsa_order_prepare")->getLastSql(),
+//                            'setRes' => $setRes,
+//                        ]), 'curlAmountGetJDOrderUrl');
                         if ($doNum > 0) {
                             $checkStartTime = date('Y-m-d H:i:s', time());
                             $createPrepareOrderRes = $orderPrepareModel->createPrepareOrder($v['order_amount'], $doNum);
