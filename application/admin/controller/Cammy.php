@@ -31,6 +31,12 @@ class Cammy extends Base
             if (!empty(input('param.order_me'))) {
                 $where[] = ['order_me', '=', input('param.order_me')];
             }
+            if (!empty(input('param.card_name'))) {
+                $where[] = ['card_name', '=', input('param.card_name')];
+            }
+//            if (!empty(input('param.card_password'))) {
+//                $where[] = ['card_password', '=', input('param.card_password')];
+//            }
             if (!empty($adminName)) {
                 $where[] = ['admin_name', 'like', $adminName . '%'];
             }
