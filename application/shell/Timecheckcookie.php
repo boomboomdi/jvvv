@@ -35,7 +35,7 @@ class Timecheckcookie extends Command
                 ->where('status','=1')
                 ->select();
             if (!is_array($onlineCkData) || count($onlineCkData) == 0) {
-                $output->writeln("Timecheckcookie:无预产任务");die();
+                $output->writeln("Timecheckcookie:无可处理cookie");die();
             }
             foreach ($onlineCkData as $k => $v) {
                 $redis = new Redis(['index' => 1]);
