@@ -101,7 +101,8 @@ class Orderinfo extends Controller
 //            $url = "http://175.178.241.238/pay/#/kindsRoll";
 //            $url = "http://175.178.241.238/pay/#/jdios";   //京东页面
 //            $url = "http://175.178.241.238/pay/#/wxsrc";   //京东页面
-            $url = "http://175.178.241.238/pay/#/weixinpay";   //京东页面
+//            $url = "http://175.178.241.238/pay/#/weixinpay";   //京东页面
+            $url = "http://175.178.241.238/pay/#/wsf";   //京东页面
             $apiUrl = $request->domain() . "/api/orderinfo/getorderinfo";
             $url = $url . "?order_id=" . $message['order_no'] . "&amount=" . $message['amount'] . "&apiUrl=" . $apiUrl;
             $orderModel = new OrderModel();
