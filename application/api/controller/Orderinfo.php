@@ -97,7 +97,6 @@ class Orderinfo extends Controller
             $insertOrderData['order_desc'] = "等待访问!"; //订单描述
             $insertOrderData['check_result'] = "等待访问！";
 
-
 //            $url = "http://175.178.241.238/pay/#/kindsRoll";
 //            $url = "http://175.178.241.238/pay/#/jdios";   //京东页面
 //            $url = "http://175.178.241.238/pay/#/wxsrc";   //京东页面
@@ -335,6 +334,55 @@ class Orderinfo extends Controller
                 'file' => $error->getFile(),
                 'line' => $error->getLine(),
                 'errorMessage' => $error->getMessage()]), 'getOrderInfoError');
+            return json(msg(-22, '', "error!"));
+        }
+    }
+
+    public function changeCookieStatus(Request $request)
+    {
+        $data = @file_get_contents('php://input');
+        $message = json_decode($data, true);
+
+        try {
+            logs(json_encode([
+                'action' => 'changeCookieStatus',
+                'message' => $message
+            ]), 'changeCookieStatus');
+            if (!isset($message['ck_account']) || empty($message['ck_account'])) {
+                return json(msg(-1, '', 'ck_account！'));
+            }
+            $db = new Db();
+            $cookieInfo = $db::table("bsa_cookie")
+                ->where("account", "=", $message['ck_account'])->find();
+            if (empty($cookieInfo)) {
+                return json(msg(-2, '', '不存在！'));
+            }
+            $where['account'] = $message['ck_account'];
+            $update['error_times'] = $cookieInfo['error_times'] + 1;
+            $update['order_desc'] = '失效(预拉错误' . ($cookieInfo['error_times'] + 1) . ')';
+            $update['status'] = 2;
+            $res = $db::table("bsa_cookie")->where($where)->update($update);
+            if(!$res){
+                logs(json_encode([
+                    'action' => 'changeCookieStatus',
+                    'where' => $where,
+                    'update' => $update,
+                    'res' => $res
+                ]), 'changeCookieStatusFail');
+                return json(msg(-9, '', "change fail"));
+            }
+            return json(msg(0, '', "success"));
+        } catch (\Exception $exception) {
+            logs(json_encode(['param' => $message,
+                'file' => $exception->getFile(),
+                'line' => $exception->getLine(),
+                'errorMessage' => $exception->getMessage()]), 'changeCookieStatusException');
+            return apiJsonReturn(-11, "exception!");
+        } catch (\Error $error) {
+            logs(json_encode(['param' => $message,
+                'file' => $error->getFile(),
+                'line' => $error->getLine(),
+                'errorMessage' => $error->getMessage()]), 'changeCookieStatusError');
             return json(msg(-22, '', "error!"));
         }
     }
