@@ -359,7 +359,7 @@ class Orderinfo extends Controller
             }
             $where['account'] = $message['ck_account'];
             $update['error_times'] = $cookieInfo['error_times'] + 1;
-            $update['order_desc'] = '失效(预拉错误' . ($cookieInfo['error_times'] + 1) . ')';
+            $update['order_desc'] = '主动失效(预拉错误' . ($cookieInfo['error_times'] + 1) . ')';
             $update['status'] = 2;
             $res = $db::table("bsa_cookie")->where($where)->update($update);
             if(!$res){

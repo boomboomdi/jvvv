@@ -300,6 +300,7 @@ class OrderModel extends Model
                 return modelReMsg(-1, "", 'cookie fail');
             }
             $checkParam['qr_url'] = $order['qr_url'];
+            $checkParam['amount'] = $order['amount'];
             $checkParam['cookie'] = $cookie['cookie'];
             $checkParam['os'] = $order['pay_type'];
             $checkParam['user_ip'] = request()->ip();
