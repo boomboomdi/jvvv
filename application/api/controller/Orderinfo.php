@@ -65,6 +65,7 @@ class Orderinfo extends Controller
             }
             $orderLimitTime = SystemConfigModel::getOrderLockTime();
             $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
+            $orderHxCanUseTime= SystemConfigModel::getOrderHxCanUseTime();
             $db::startTrans();
             $hxOrderData = $db::table("bsa_order_prepare")
                 ->where('order_amount', '=', $message['amount'])
@@ -73,7 +74,7 @@ class Orderinfo extends Controller
                 ->where('get_url_status', '=', 1)       //预拉成功
                 ->where('order_limit_time', '=', 0)
                 ->where('check_status', '<>', 1)        //是否查单使用中
-                ->where('add_time', '>', time() - $orderHxLockTime) //  匹配当前时间在 核销限制回调时间480s之前的核销单
+                ->where('add_time', '>', time() - $orderHxCanUseTime) //  匹配当前时间在 核销限制回调时间480s之前的核销单
                 ->order("add_time asc")
                 ->lock(true)
                 ->find();
