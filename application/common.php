@@ -46,6 +46,16 @@ function getJdCookieAccount($cookie)
     return (string)$return;
 }
 
+function getPddCookieAccount($cookie)
+{
+    $cookie = str_replace(" ", '', $cookie);
+    $start = strpos($cookie, 'PDDAccessToken=');
+    $cookie2 = substr($cookie, $start);
+    $end = strpos($cookie2, ';');
+    $return = substr($cookie2, 0, $end);
+    return (string)$return;
+}
+
 /**
  * 检测密码
  * @param $dbPassword
