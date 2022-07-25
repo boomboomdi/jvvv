@@ -64,7 +64,6 @@ class Orderinfo extends Controller
                 return apiJsonReturn(-5, "该订单号已存在！");
             }
             $orderLimitTime = SystemConfigModel::getOrderLockTime();
-            $orderHxLockTime = SystemConfigModel::getOrderHxLockTime();
             $orderHxCanUseTime= SystemConfigModel::getOrderHxCanUseTime();
             $db::startTrans();
             $hxOrderData = $db::table("bsa_order_prepare")
