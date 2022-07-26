@@ -64,6 +64,7 @@ class Timecheckorder extends Command
                             $getResParam['cookie'] = $cookie['cookie'];
                             $getResParam['order_me'] = $v['order_me'];
                             $getResParam['order_pay'] = $v['order_pay'];
+                            $getResParam['check_times'] = $v['check_times'] + 1;
                             $getResParam['amount'] = $v['amount'];
                             $checkStartTime = date("Y-m-d H:i:s", time());
                             $checkOrderStatusRes = $orderPrepareModel->checkOrderStatus($getResParam);
