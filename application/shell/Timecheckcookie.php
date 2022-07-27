@@ -47,10 +47,11 @@ class Timecheckcookie extends Command
                     $noPayCount = Db::table('bsa_order')
                         ->where('ck_account', '=', $v['account'])
                         ->where('pay_status', '=', 3)
+                        ->where('check_times', '>', 10)
                         ->count();
-                    if ($noPayCount > 8) {
+                    if ($noPayCount > 3) {
                         $totalNum++;
-                        $cookieUpdate['order_desc'] = "未支付超过9次支付失败！";
+                        $cookieUpdate['order_desc'] = "未支付超过3笔，自动禁用！";
                         $cookieUpdate['status'] = 2;
                         $updateRes = Db::table('bsa_cookie')
                             ->where('ck_account', '=', $v['account'])
@@ -65,6 +66,28 @@ class Timecheckcookie extends Command
                             'updateRes' => $updateRes,
                         ]), 'Timecheckcookie');
                         $redis->delete($checkCookieKey);
+                    }else{
+                        $payPayCount = Db::table('bsa_order')
+                            ->where('ck_account', '=', $v['account'])
+                            ->where('pay_status', '=', 1)
+                            ->count();
+                        if($payPayCount>5){
+                            $cookieUpdate['order_desc'] = "支付超过5笔，自动禁用！";
+                            $cookieUpdate['status'] = 2;
+                            $updateRes = Db::table('bsa_cookie')
+                                ->where('ck_account', '=', $v['account'])
+                                ->update($cookieUpdate);
+                            if(!$updateRes){
+                                $redis->delete($checkCookieKey);
+                            }
+                            logs(json_encode([
+                                'ck_account' => $v['account'],
+                                'noPayCount' => $noPayCount,
+                                'cookieUpdate' => $cookieUpdate,
+                                'updateRes' => $updateRes,
+                            ]), 'Timecheckcookie');
+                            $redis->delete($checkCookieKey);
+                        }
                     }
 
                 }
