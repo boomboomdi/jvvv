@@ -113,6 +113,9 @@ class Ordernotify extends Controller
                 $orderUpdate['actual_amount'] = $message['amount'];   //支付金额
                 $orderUpdate['pay_time'] = $message['time'];          //支付 时间
             }
+            if(isset($message['status_name'])){
+                $payStatus.="备注：".$message['status_name'];
+            }
             $orderInfo['pay_status'] = 1;
             $checkResult = "第" . ($orderInfo['check_times'] + 1) . "次查询" . $checkOrderStatus . "|" . $payStatus . "(" . date("Y-m-d H:i:s") . ")";
 
