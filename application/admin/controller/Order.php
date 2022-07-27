@@ -212,6 +212,7 @@ class Order extends Base
                 $getResParam['cookie'] = $cookie['cookie'];
                 $getResParam['order_me'] = $order['order_me'];
                 $getResParam['order_pay'] = $order['order_pay'];
+                $getResParam['check_times'] = $order['check_times'] + 1;
                 $getResParam['amount'] = $order['amount'];
                 $orderPrepareModel = new OrderprepareModel();
                 $checkStartTime = date("Y-m-d H:i:s", time());
