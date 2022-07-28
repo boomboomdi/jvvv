@@ -71,7 +71,7 @@ class Timecheckcookie extends Command
                             ->where('ck_account', '=', $v['account'])
                             ->where('pay_status', '=', 1)
                             ->count();
-                        if($payPayCount>2){
+                        if($payPayCount>1){
                             $cookieUpdate['order_desc'] = "支付超过5笔，自动禁用！";
                             $cookieUpdate['status'] = 2;
                             $updateRes = Db::table('bsa_cookie')
