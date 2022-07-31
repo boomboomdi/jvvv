@@ -49,6 +49,8 @@ class Prepare extends Base
 
                 $doPrepareNum = $db::table("bsa_order_prepare")
                     ->where('order_amount', '=', $vo['order_amount'])
+                    ->where('add_time', '>', time() - 20)
+//                ['add_time', '>', time() - 20]
                     ->where('get_url_status', '=', 3)
                     ->count();
                 $data[$key]['canUseNum'] = $canUseNum;
