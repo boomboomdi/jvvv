@@ -90,7 +90,7 @@ class OrderprepareModel extends Model
 
             $where[] = ['add_time', '>', time() - $orderHxCanUseTime];
             if ($getUrlStatus == 3) {
-                $where[] = ['add_time', '>', time() - 30];
+                $where[] = ['add_time', '>', time() - 20];
             }
             $where[] = ['get_url_status', '=', $getUrlStatus];
             $where[] = ['order_status', '=', $orderStatus];
