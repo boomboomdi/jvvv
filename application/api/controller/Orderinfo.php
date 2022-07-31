@@ -188,7 +188,7 @@ class Orderinfo extends Controller
                         ->find();
                     if (!$hxOrderData) {
                         $db::rollback();
-                        $orderUpdate['order_desc'] = "匹配失败"; //支付订单
+                        $orderUpdate['order_desc'] = "无预拉单|匹配失败"; //支付订单
                         // 0、等待下单 1、支付成功（下单成功）！2、支付失败（下单成功）！3、下单失败！4、等待支付（下单成功）！5、已手动回调。
                         $orderUpdate['order_status'] = 3;
                         $updateOrderRes = $db::table("bsa_order")
