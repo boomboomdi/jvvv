@@ -55,6 +55,15 @@ function getPddCookieAccount($cookie)
     $return = substr($cookie2, 0, $end);
     return (string)$return;
 }
+function getSnCookieAccount($cookie)
+{
+    $cookie = str_replace(" ", '', $cookie);
+    $start = strpos($cookie, 'custno=');
+    $cookie2 = substr($cookie, $start);
+    $end = strpos($cookie2, ';');
+    $return = substr($cookie2, 0, $end);
+    return (string)$return;
+}
 
 /**
  * 检测密码

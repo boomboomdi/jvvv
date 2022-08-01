@@ -70,7 +70,7 @@ class Cookie extends Base
             $cookieContentsArray = explode(PHP_EOL, $param['cookie_contents']);
             if (is_array($cookieContentsArray)) {
                 foreach ($cookieContentsArray as $key => $v) {
-                    $getCookieAccount = getPddCookieAccount($v);
+                    $getCookieAccount = getSnCookieAccount($v);
                     if ($getCookieAccount) {
                         $addCookieParam['last_use_time'] = time();
                         $addCookieParam['cookie'] = $v;
